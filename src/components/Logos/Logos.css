@@ -1,0 +1,9 @@
+.logosContainer{
+    position: relative;
+    margin-top: 150px;
+}
+.LogosImg{
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+}

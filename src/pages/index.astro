@@ -1,16 +1,71 @@
 ---
-
+import "../styles/index.css";
+import "../styles/fonts.css";
+import Header from "../components/Header/Header";
+import Main from "../components/Main/Main";
+import About from "../components/About/About";
+import Logos from "../components/Logos/Logos";
+import Projects from "../components/Projects/Projects";
+import Ieee from "../components/Ieee/Ieee";
+import Ielts from "../components/Ielts/Ielts";
+import Footer from "../components/Footer/Footer";
+import Animaiton from "../components/Animaiton/Animaiton.jsx";
 ---
 
 <html lang="en">
 	<head>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-G56N6HQGH1"></script>
+		<script src="/analytics.js" is:inline></script>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="theme-color" content="#FFFFFF">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+		<meta name="title" content="IBRA - Portfolio" />
+		<meta name="description" content="Hey, welcome to my corner of the web! Check out my awesome projects and let's chat about creating digital awesomeness!" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://www.ibra.ws/" />
+		<meta property="og:title" content="IBRA - Portfolio" />
+		<meta property="og:description" content="Hey, welcome to my corner of the web! Check out my awesome projects and let's chat about creating digital awesomeness!" />
+		<meta property="og:image" content="https://metatags.io/images/meta-tags.png" />
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content="https://www.ibra.ws/" />
+		<meta property="twitter:title" content="IBRA - Portfolio" />
+		<meta property="twitter:description" content="Hey, welcome to my corner of the web! Check out my awesome projects and let's chat about creating digital awesomeness!" />
+		<meta property="twitter:image" content="https://metatags.io/images/meta-tags.png" />
+		<title>IBRA - Portfolio</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<div class="parent">
+			<Header client:load />
+			<Main client:load />
+			<About client:load />
+			<Logos client:only="react" />
+			<Projects client:load />
+			<Ieee client:load />
+			<Ielts client:load />
+			<div class="RightVector" data-aos="fade-left">
+				<div class="circularMovement"></div>
+			</div>
+			<div class="LeftVector" data-aos="fade-right">
+				<div class="circularMovement circularMovementL"></div>
+			</div>
+			<div id="stars"></div>
+			<div id="stars2"></div>
+			<div class="blob"></div>
+			<Footer client:load />
+		</div>
 	</body>
+	<script src="https://unpkg.com/aos@next/dist/aos.js" is:inline></script>
+	<Animaiton client:load />
+	<script is:inline>
+		var cursor = document.querySelector('.blob');
+
+		document.addEventListener('mousemove', function(e){
+		var x = e.clientX;
+		var y = e.clientY;
+		cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`
+		});
+	</script>
 </html>

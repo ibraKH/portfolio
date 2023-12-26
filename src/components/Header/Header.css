@@ -1,0 +1,30 @@
+.Header{
+    position: fixed;
+    top: 0;
+    height: 50px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    z-index: 2;
+}
+.Header a{
+    color: #181818;
+    text-decoration: none;
+}
+.ibra{
+    font-size: x-large;
+    font-family:researcher;
+}
+#logo{
+    left: 20px;
+    text-align: left;
+    margin-left: 20px;
+}
+.toMainLink{
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}

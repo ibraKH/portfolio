@@ -1,0 +1,127 @@
+.ProjectsContainer{
+    position: relative;
+    margin-top: 200px;
+}
+.ProjectsTitle{
+    font-family:Comfortaa;
+    font-size: xx-large;
+    color: #181616;
+}
+.CardsContainer{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+.card{
+    width: 350px;
+    height: 250px;
+    position: relative;
+    margin: auto;
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.card a{
+    text-decoration: none;
+    color: white;
+}
+.cardText{
+    position: absolute;
+    left: 10px;
+    bottom: 50px;
+    font-family: Comfortaa;
+}
+.cardText h2{
+    position: absolute;
+    left: 20px;
+    text-align: left;
+    width: 150px;
+    bottom: 15px;
+    font-size: 16px;
+}
+.CardTextTechs{
+    position: absolute;
+    left: 20px;
+    bottom: 5px;
+    width: 300px;
+    text-align: left;
+    font-size: 14px;
+}
+.CardTextTitle{
+    margin-bottom: 50px;
+}
+.background {
+    fill: linear-gradient(90deg, #5936B4 0%, #362A84 100%);
+    position: relative;
+    inset: 0;
+    z-index: -1;
+}
+.card:hover .CardPathSvg{
+    fill: #F32C7D;
+}
+.LinkToGithubProjects{
+    position: absolute;
+    width: 100px;
+    height: 30px;
+}
+.MoreButton{
+    width: 100px;
+    height: 30px;
+    background-color: #FEC900;
+    margin: auto;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 50%;
+    transform: translate(-50%);
+}
+.MoreButton:hover{
+    background-color: #181616;
+}
+.MoreInGithubYellow{
+    display: none;
+    opacity: 0;
+}
+.MoreButton:hover .MoreInGithubYellow{
+    display: block;
+    opacity: 1;
+}
+.MoreButton:hover .MoreInGithub{
+    display: none;
+    opacity: 0;
+}
+.MoreInGithub{
+    height: 25px;
+}
+.MoreInGithubYellow{
+    height: 25px;
+}
+.cardImage{
+    position: absolute;
+    right: 40px;
+    top: 40px;
+}
+.cardImage img{
+    width: 150px;
+    height: 150px;
+}
+@media only screen and (max-width: 1200px) {
+    .CardsContainer{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media only screen and (max-width: 780px) {
+    .CardsContainer{
+        grid-template-columns: 1fr;
+    }
+    .cardImage img{
+        width: 170px;
+        height: 170px;
+    }
+}

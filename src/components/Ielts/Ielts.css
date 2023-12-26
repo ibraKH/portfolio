@@ -1,0 +1,32 @@
+.Ielts{
+    margin-top: 100px;
+    font-family: Comfortaa;
+}
+.Ielts h2{
+    font-size: 25px;
+}
+.Ielts i{
+    font-style: normal;
+    color: #E31836;
+    font-family: researcher;
+}
+.scoreContainer{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    font-family: researcher;
+}
+.scoreContainer h3{
+    color: #E31836;
+}
+.scoreContainer h4{
+    font-weight: normal;
+    font-size: larger;
+}
+@media only screen and (max-width: 650px) {
+    .scoreContainer{
+        grid-template-columns: 1fr;
+    }
+}

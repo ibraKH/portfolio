@@ -1,0 +1,29 @@
+#Main{
+    position: relative;
+    height: 650px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.MainPattern{
+    position: relative;
+}
+.MainText{
+    position: absolute;
+    left: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.pattern{
+    position: absolute;
+    margin: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.MyName{
+    margin-bottom: 300px;
+}

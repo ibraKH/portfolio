@@ -1,0 +1,42 @@
+.IeeeParent{
+    margin-top: 200px;
+    font-family: Comfortaa;
+}
+.IeeeParent h2{
+    font-weight: normal;
+}
+.IeeeDate{
+    color: #FEC900;
+    margin-top: -25px;
+}
+.IeeeContainer{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+.IeeeInfo{
+    margin-top: 35px;
+    width: 300px;
+    position: relative;
+    margin: auto;
+}
+.IeeeInfo::after{
+    content: "";
+    position: absolute;
+    width: 181px;
+    background-image: url("/images/IeeeLine.svg");
+    height: 36px;
+    right: 20px;
+    bottom: -5px;
+    z-index: -1;
+}
+@media only screen and (max-width: 780px) {
+    .IeeeContainer{
+        grid-template-columns: 1fr;
+    }
+    .IeeeSecond{
+        margin-top: 40px;
+    }
+}

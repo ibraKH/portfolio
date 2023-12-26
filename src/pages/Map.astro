@@ -1,0 +1,41 @@
+---
+import Web from "../components/Web/Web.astro";
+
+import "../styles/fonts.css";
+import Animaiton from "../components/Animaiton/Animaiton.jsx";
+
+---
+<html lang="en">
+<head>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-G56N6HQGH1"></script>
+	<script src="/analytics.js" is:inline></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#181818">
+	<link rel="apple-touch-icon" sizes="180x180" href="https://www.ibra.ws/images/favicon/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="https://www.ibra.ws/images/favicon/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="https://www.ibra.ws/images/favicon/favicon-16x16.png" />
+	<link rel="icon" type="image/png" href="https://www.ibra.ws/images/favicon/favicon-32x32.png" />
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://www.ibra.ws">
+	<meta property="og:title" content="FullStack Map">
+	<meta property="og:description" content="Learn about FrontEnd and BackEnd and the journey to become a better web developer.">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://www.ibra.ws/images/favicon/favicon-16x16.png" />
+	<meta name="description" content="Learn about FrontEnd and BackEnd and the journey to become a better web developer." />
+	<title>FullStack Map</title>
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  	/>
+	<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+	<title>خريطة الويب</title>
+</head>
+<body>
+	<div id="parent">
+		<Web />
+	</div>
+	<Animaiton client:load />
+</body>
+</html>

@@ -1,4 +1,3 @@
-import React from 'react'
 import './Ieee.css';
 
 const Ieee = () => {

@@ -1,0 +1,118 @@
+---
+import "./Web.css";
+import Circles from "./circles.jsx";
+
+import Cards from "./Card.astro";
+
+const tools = {
+    id: "1",
+    title : "مصادر رهيبة",
+    data:[
+    {
+        img: "/images/Web/coderAcademy.png",
+        title: "Coderacademy",
+        details: "منصة كود أكاديمي , منصة تعليمية جميلة بطريقة عرض و شرح لغات البرمجة , المنصة تحتاج أشتراك",
+        url: "https://www.codecademy.com/",
+        color: "fourthColor"
+    },
+    {
+        img: "/images/Web/freeCodeCamp.svg",
+        title: "freeCodeCamp",
+        details: "منصة فري كود كامب , منصة مشهورة عالمية مجانية و معروفين بطريقة تفصيلهم للشرح",
+        url: "https://freeCodeCamp.org",
+        color: "thirdColor"
+    },
+    {
+        img: "/images/Web/satr.svg",
+        title: "Satr Codes",
+        details: " منصة سطر التعليمية , منصة سعودية تحتوي على دورات برمجية باللغة العربية و أيضا مجانية للكل",
+        url: "https://satr.codes",
+        color: "firstColor"
+    },
+    {
+        img: "/images/Web/Udemy.svg",
+        title: "Udemy",
+        details: "منصة يوديمي , من المنصات المشهورة عالمية تحتوي على دورات في مجالات مختلفة من ضمنها مجال البرمجة",
+        url: "https://www.udemy.com",
+        color: "secendColor"
+    } 
+    ]
+}
+const links = {
+    id: 2,
+    title: "مشاريع تطور من مهاراتك",
+    data:[
+    {
+        img: "/images/Web/shoping.svg",
+        title: "Shoping Website",
+        details: "قم ببناء متجر ألكتروني يحتوي على منتجات متنوعة و أيضا أضافة سلة للمنتجات وحساب السعر",
+        url: "https://youtube.com",
+        level: "مبتدء",
+        color: "easy"
+    },
+    {
+        img: "/images/Web/password.svg",
+        title: ".PassWord Gen",
+        details: "قم ببناء برنامج يقوم بإنشاء كلمة مرور أمنة وصعب أختراقها ",
+        url: "https://youtube.com",
+        level: "متوسط",
+        color: "medium"
+    },
+    {
+        img: "/images/Web/social.svg",
+        title: "Social Media App",
+        details: "قم ببناء موقع للتواصل الأجتماعي مشابه للبرامج المشهورة عالميا",
+        url: "https://youtube.com",
+        level: "محترف",
+        color: "hard"
+    },
+    {
+        img: "/images/Web/bot.svg",
+        title: "Bot",
+        details: "قم بصنع بوت ألي يستقبل المهام وينفذها تلقائيا",
+        url: "https://youtube.com",
+        level: "متوسط",
+        color: "medium"
+    }
+    ]
+}
+
+---
+<div id="main">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    <div id="stars4"></div>
+    <svg width="50" height="50" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="30" pathLength="1" class="bg" />
+        <circle cx="50" cy="50" r="30" pathLength="1" class="progress" />
+    </svg>
+    <div id="header">
+        <div id="logo">
+            <div id="logoContainer">
+                <h1 class="ibra" data-aos="fade-down"><a href="/" class="toMainLink">IBRA BLOG</a></h1>
+            </div>
+        </div>
+        <div id="title">
+            <h1 class="ar title" data-aos="fade-up">خريطة الويب</h1>
+        </div>
+    </div>
+    <div id="detailsContainer">
+        <div id="details">
+            <p class="ar topic" data-aos="fade-left">أهلا نورت الموقع , هنا بستعرض خريطة وطريق الأحتراف في برمجة المواقع الألكترونية</p>
+        </div>
+    </div>
+    <div id="rightContainer">
+        <Circles client:load />
+    </div>
+    <div id="leftContainer">
+        <Cards cards={tools} />
+    </div>
+    <div id="frameWorks">
+        <Cards cards={links} />
+    </div>
+    <div id="footer" data-aos="fade-up">
+        <h3 class="ar thin endText">أنتهت الرحلة أتمنى نالت أعجابك</h3>
+        <p class="ibraLink eng">Made By <a href="https://twitter.com/igsibra" target="__blank" class="myName">ibra</a></p>
+    </div>
+</div>

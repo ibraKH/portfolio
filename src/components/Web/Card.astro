@@ -1,0 +1,31 @@
+---
+import "./Web.css";
+const { cards } = Astro.props;
+
+
+
+
+---
+<div class="cardsContainer">
+    <h2 class="cardsTitle ar thin sRtl">{cards.title} :</h2>
+    {cards.data.map((x : any,i : any) => {
+        return (
+            <div class="cardsParent ar sRtl">
+                <div class={cards.id === "1" ? "cards " + i : "cardsM " + i} data-aos={cards.id === "1" ? i % 2 === 0 ? "fade-up-left" : "fade-up-right" : i % 2 === 0 ? "flip-left" : "flip-right"} data-aos-duration="1000">
+                    <img src={x.img} alt="image" class="cardsImage" />
+                    <h2 class="lMargin eng">{x.title}</h2>
+                    <h6 class="lMargin thin black">{x.details}</h6>
+                    {cards.id === "1" ? 
+                        <button class={"cardsButton " + x.color}><a href={x.url} class="ar" target="__blank">المزيد</a></button>
+                    :
+                        <div class="levelContainer">
+                            <p class="lMargin">المستوى : </p>
+                            <h5 class={x.color + " thin levels lMargin"}>{x.level}</h5>
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+        )
+    })}
+</div>

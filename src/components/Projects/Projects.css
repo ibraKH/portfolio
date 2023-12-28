@@ -30,6 +30,9 @@
     text-decoration: none;
     color: white;
 }
+.card:hover{
+    scale: 1.1;
+}
 .cardText{
     position: absolute;
     left: 10px;
@@ -98,9 +101,11 @@
 }
 .MoreInGithub{
     height: 25px;
+    width: 25px;
 }
 .MoreInGithubYellow{
     height: 25px;
+    width: 25px;
 }
 .cardImage{
     position: absolute;
@@ -121,7 +126,7 @@
         grid-template-columns: 1fr;
     }
     .cardImage img{
-        width: 170px;
-        height: 170px;
+        width: 150px;
+        height: 150px;
     }
 }

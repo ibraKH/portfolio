@@ -1,12 +1,12 @@
 import "./Projects.css";
 
 let projectsArray = [
-    {title: "E-commerce website", image: "second.svg", tech: "Nodejs | PostgreSQL | AWS | Angular", link: "https://github.com/ibraKH/fullstack-app"},
-    {title: "MLP Model", image: "third.svg", tech: "Python | Pandas | Matplotlib", link: "https://github.com/ibraKH/MLP_model"},
-    {title: "Full Stack Map", image: "fourth.svg", tech: "React | Astro | Figma", link: "https://www.ibra.ws/map/"},
-    {title: "Image Proccessing", image: "fifth.svg", tech: "Nodejs | Sharp | TypeScript | Jasmine", link: "https://github.com/ibraKH/imageProcessing"},
-    {title: "Weather app", image: "sixth.svg", tech: "Nodejs", link: "https://github.com/ibraKH/weather-app"},
-    {title: "Telegram Bot", image: "first.svg", tech: "Nodejs", link: "https://github.com/ibraKH/telegram-bot"}
+    {title: "E-commerce website", image: "second.webp", tech: "Nodejs | PostgreSQL | AWS | Angular", link: "https://github.com/ibraKH/fullstack-app"},
+    {title: "MLP Model", image: "third.webp", tech: "Python | Pandas | Matplotlib", link: "https://github.com/ibraKH/MLP_model"},
+    {title: "Full Stack Map", image: "fourth.webp", tech: "React | Astro | Figma", link: "https://www.ibra.ws/map/"},
+    {title: "Image Proccessing", image: "fifth.webp", tech: "Nodejs | Sharp | TypeScript | Jasmine", link: "https://github.com/ibraKH/imageProcessing"},
+    {title: "Weather app", image: "sixth.webp", tech: "Nodejs", link: "https://github.com/ibraKH/weather-app"},
+    {title: "Telegram Bot", image: "first.webp", tech: "Nodejs", link: "https://github.com/ibraKH/telegram-bot"}
 ];
 
 const Projects = () => {

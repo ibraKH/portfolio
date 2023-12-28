@@ -39,6 +39,13 @@
     width: 35px;
     height: 35px;
 }
+.SocialMediaIcons{
+    width: 35px;
+    height: 35px;
+}
+.SocialMediaIcons:hover{
+    scale: 1.1;
+}
 .Footer p{
     margin-top: 50px;
 }

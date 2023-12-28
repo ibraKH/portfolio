@@ -1,10 +1,11 @@
 import './Ielts.css';
+import Counter from './Counter';
 
 let scores = [
-    {score: 7.5, name: "Listening"},
-    {score: 7, name: "Reading"},
-    {score: 6.5, name: "Writing"},
-    {score: 7, name: "Speaking"},
+    {score: 7, name: "Listening", half: true},
+    {score: 7, name: "Reading", half: false},
+    {score: 6, name: "Writing", half: true},
+    {score: 7, name: "Speaking", half: false},
 ]
 
 const Ielts = () => {
@@ -16,7 +17,7 @@ const Ielts = () => {
             {scores.map((x, i) => {
                 return(
                     <div className="score" key={i}>
-                        <h3 data-aos="flip-left">{x.score}</h3>
+                        <Counter num={x.score} half={x.half} />
                         <h4>{x.name}</h4>
                     </div>
                 )

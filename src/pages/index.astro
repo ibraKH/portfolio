@@ -9,13 +9,22 @@ import Projects from "../components/Projects/Projects";
 import Ieee from "../components/Ieee/Ieee";
 import Ielts from "../components/Ielts/Ielts";
 import Footer from "../components/Footer/Footer";
+import Preload from "../components/Preload/Preload";
+import Vectors from "../components/Vectors/Vectors";
+import Cv from "../components/Cv/Cv";
 import Animaiton from "../components/Animaiton/Animaiton.jsx";
 ---
 
 <html lang="en">
 	<head>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-G56N6HQGH1"></script>
-		<script src="/analytics.js" is:inline></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-G56N6HQGH1');
+		</script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="theme-color" content="#FFFFFF">
@@ -28,33 +37,28 @@ import Animaiton from "../components/Animaiton/Animaiton.jsx";
 		<meta property="og:url" content="https://www.ibra.ws/" />
 		<meta property="og:title" content="IBRA - Portfolio" />
 		<meta property="og:description" content="Hey, welcome to my corner of the web! Check out my awesome projects and let's chat about creating digital awesomeness!" />
-		<meta property="og:image" content="https://metatags.io/images/meta-tags.png" />
+		<meta property="og:image" content="/images/Ibra.svg" />
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content="https://www.ibra.ws/" />
 		<meta property="twitter:title" content="IBRA - Portfolio" />
 		<meta property="twitter:description" content="Hey, welcome to my corner of the web! Check out my awesome projects and let's chat about creating digital awesomeness!" />
-		<meta property="twitter:image" content="https://metatags.io/images/meta-tags.png" />
+		<meta property="twitter:image" content="/images/Ibra.svg" />
 		<title>IBRA - Portfolio</title>
 	</head>
 	<body>
 		<div class="parent">
-			<Header client:load />
-			<Main client:load />
-			<About client:load />
+			<Preload client:load />
+			<Header client:visible />
+			<Main client:visible />
+			<About client:visible />
 			<Logos client:only="react" />
-			<Projects client:load />
-			<Ieee client:load />
-			<Ielts client:load />
-			<div class="RightVector" data-aos="fade-left">
-				<div class="circularMovement"></div>
-			</div>
-			<div class="LeftVector" data-aos="fade-right">
-				<div class="circularMovement circularMovementL"></div>
-			</div>
-			<div id="stars"></div>
-			<div id="stars2"></div>
+			<Projects client:visible />
+			<Ieee client:visible />
+			<Ielts client:only="react" />
+			<Cv client:only="react" />
+			<Vectors client:visible />
 			<div class="blob"></div>
-			<Footer client:load />
+			<Footer client:visible />
 		</div>
 	</body>
 	<script src="https://unpkg.com/aos@next/dist/aos.js" is:inline></script>

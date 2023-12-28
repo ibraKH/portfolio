@@ -14,13 +14,13 @@ const Footer = () => {
             </div>
             <div className="FooterLinks">
                 <a href="https://github.com/ibraKH" target="__blank">
-                    <img src="/images/Social/Github.svg" alt="Github" />
+                    <img src="/images/Social/Github.svg" alt="Github" className="SocialMediaIcons" />
                 </a>
                 <a href="https://www.linkedin.com/in/ibrahimalharthi/" target="__blank">
-                    <img src="/images/Social/LinkedIn.svg" alt="LinkedIn" />
+                    <img src="/images/Social/LinkedIn.svg" alt="LinkedIn" className="SocialMediaIcons" />
                 </a>
                 <a href="https://twitter.com/IGsibra" target="__blank">
-                    <img src="/images/Social/X.svg" alt="X" />
+                    <img src="/images/Social/X.svg" alt="X" className="SocialMediaIcons" />
                 </a>
             </div>
         </div>

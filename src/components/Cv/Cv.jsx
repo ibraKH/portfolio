@@ -26,7 +26,7 @@ const Cv = () => {
     }
   return (
         <div className="CvContainer">
-            <h2 data-aos="fade-up">Feel free to review my CV for more info!</h2>
+            <h2 data-aos="fade-up">Grab a copy of my CV!</h2>
             <div className="donwloadContainer" onClick={downloading}>
                 <img src="/images/download.svg" alt="download" className={image} />
                 <a href='/Web_Ibrahim_alharthi_resume.pdf' className={'hide'} target='_blank'>

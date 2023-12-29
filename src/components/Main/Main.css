@@ -9,23 +9,30 @@
 }
 .MainPattern{
     position: relative;
+    z-index: 2;
 }
-.MainText{
+.TextAnimation{
     position: absolute;
-    left: 50%;
-    left: 50%;
     top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
-.pattern{
+.MainDots{
     position: absolute;
-    margin: auto;
-    left: 50%;
     top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
-.MyName{
-    margin-bottom: 300px;
-    width: 281px;
-    height: 124px;
+.MainTextImage{
+    position: relative;
+    animation:spin 10s linear infinite;
 }
+@keyframes spin {
+    0%{
+       transform: rotate(0deg);
+    }
+   100%{
+       transform: rotate(360deg);
+    }
+}
+   

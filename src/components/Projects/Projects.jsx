@@ -5,8 +5,8 @@ let projectsArray = [
     {title: "MLP Model", image: "third.webp", tech: "Python | Pandas | Matplotlib", link: "https://github.com/ibraKH/MLP_model"},
     {title: "Full Stack Map", image: "fourth.webp", tech: "React | Astro | Figma", link: "https://www.ibra.ws/map/"},
     {title: "Image Proccessing", image: "fifth.webp", tech: "Nodejs | Sharp | TypeScript | Jasmine", link: "https://github.com/ibraKH/imageProcessing"},
-    {title: "Weather app", image: "sixth.webp", tech: "Nodejs", link: "https://github.com/ibraKH/weather-app"},
-    {title: "Telegram Bot", image: "first.webp", tech: "Nodejs", link: "https://github.com/ibraKH/telegram-bot"}
+    {title: "Weather app", image: "sixth.webp", tech: "Nodejs | Weather API", link: "https://github.com/ibraKH/weather-app"},
+    {title: "Telegram Bot", image: "first.webp", tech: "Nodejs | Telegram API", link: "https://github.com/ibraKH/telegram-bot"}
 ];
 
 const Projects = () => {

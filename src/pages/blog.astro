@@ -1,0 +1,59 @@
+---
+import "../styles/index.css";
+import "../styles/fonts.css";
+import Header from "../components/Header/Header";
+import Preload from "../components/Preload/Preload";
+import Blogs from "../components/Blogs/Blogs";
+import Animaiton from "../components/Animaiton/Animaiton.jsx";
+---
+
+<html lang="en">
+	<head>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-G56N6HQGH1"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-G56N6HQGH1');
+		</script>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="theme-color" content="#FFFFFF">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+		<meta name="title" content="IBRA - Blog" />
+		<meta name="description" content="Hey there! Ready to dive into ibra's blog? Stay tuned cool topics and conversations coming soon!" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://www.ibra.ws/" />
+		<meta property="og:title" content="IBRA - Blog" />
+		<meta property="og:description" content="Hey there! Ready to dive into ibra's blog? Stay tuned cool topics and conversations coming soon!" />
+		<meta property="og:image" content="/images/Ibra.svg" />
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content="https://www.ibra.ws/" />
+		<meta property="twitter:title" content="IBRA - Blog" />
+		<meta property="twitter:description" content="Hey there! Ready to dive into ibra's blog? Stay tuned cool topics and conversations coming soon!" />
+		<meta property="twitter:image" content="/images/Ibra.svg" />
+		<title>IBRA - Blog</title>
+	</head>
+	<body>
+		<div class="blogParent">
+			<Preload client:load />
+			<Header client:visible />
+			<Blogs client:visible />
+			<div class="blob"></div>
+		</div>
+	</body>
+	<script src="https://unpkg.com/aos@next/dist/aos.js" is:inline></script>
+	<Animaiton client:load />
+	<script is:inline>
+		var cursor = document.querySelector('.blob');
+
+		document.addEventListener('mousemove', function(e){
+		var x = e.clientX;
+		var y = e.clientY;
+		cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`
+		});
+	</script>
+</html>

@@ -21,7 +21,7 @@ const Cv = () => {
 
     const download = () => {
         if(done){
-            window.open('/Web_Ibrahim_alharthi_resume.pdf', "_blank")
+            window.open('/SE_ibrahim_alharthi_resume.pdf', "_blank")
         }
     }
   return (
@@ -29,7 +29,7 @@ const Cv = () => {
             <h2 data-aos="fade-up">Grab a copy of my CV!</h2>
             <div className="donwloadContainer" onClick={downloading}>
                 <img src="/images/download.svg" alt="download" className={image} />
-                <a href='/Web_Ibrahim_alharthi_resume.pdf' className={'hide'} target='_blank'>
+                <a href='/SE_ibrahim_alharthi_resume.pdf' className={'hide'} target='_blank'>
                     <button ref={ref}>Donwload</button>
                 </a>
                 <div className={done === true ? "wrapper" : 'hide'}>

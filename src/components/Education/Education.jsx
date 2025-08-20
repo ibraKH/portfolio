@@ -4,6 +4,7 @@ import Typer from '../Typer/Typer.jsx';
 const educationArray = [
     {time: "July 18-Aug 23", title: "Bechelor of Computer Engineering", institution: "Taif University", details: ""},
     {time: "Sep 22-Dec 22", title: "Nanodegree in Full Stack JavaScript Developer", institution: "Udacity - MCIT, Online", details: "Mastered Node.js backend development, TypeScript, and API creation with PostgreSQL and Express. Proficient in Angular fundamentals and deployment automation using AWS Elastic Beanstalk and CircleCI."},
+    {time: "Current", title: "Master of Machine Learning and Computer Vision", institution: "Australian National University", details: ""}
 ]
 
 const Education = () => {

@@ -25,7 +25,7 @@ const Footer = () => {
             </div>
         </div>
         <p>
-            © Copyright 2023 - IBRA
+            © Copyright 2025 - IBRA
         </p>
     </div>
   )

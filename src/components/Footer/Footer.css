@@ -19,6 +19,7 @@
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+    margin-bottom: 20px;
 }
 .FooterText{
     width: 450px;
@@ -49,7 +50,7 @@
 }
 .Footer p{
     margin-top: 50px;
-    color: #9ca3af;
+    color: #e5e7eb;
 }
 @media only screen and (max-width: 650px) {
     .FooterText{

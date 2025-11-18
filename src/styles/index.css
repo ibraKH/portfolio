@@ -1,7 +1,7 @@
 body{
     margin: 0;
     padding: 0;
-    background-color: #0A0A0A;
+    background-color: #030306;
     overflow-x: hidden;
     position: relative;
 }
@@ -22,49 +22,51 @@ body::before {
 body::after {
     content: '';
     position: fixed;
-    top: 0;
+    top: -10%;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-        125% 125% at 50% 20%,
-        #0A0A0A 35%,
-        #2979FF 50%,
-        #FF80AB 60%,
-        #FF6D00 70%,
-        #FFD600 80%,
-        #00E676 90%,
-        #3D5AFE 100%
-    );
-    opacity: 0.6;
+    width: 150%;
+    height: 150%;
+    background:
+        radial-gradient(
+            ellipse 135% 85% at 50% 0%,
+            #030306 35%,
+            #0B1021 46%,
+            #1E54AE 58%,
+            #3879F9 70%,
+            #E97FB3 83%,
+            #FF6F17 96%,
+            rgba(255, 111, 23, 0.05) 100%
+        );
+    opacity: 0.9;
     pointer-events: none;
     z-index: 0;
-    animation: breathe 8s ease-in-out infinite;
+    animation: horizonBreathe 6s ease-in-out infinite;
+    filter: blur(0.5px);
 }
-@keyframes breathe {
+@keyframes horizonBreathe {
     0%, 100% {
-        opacity: 0.35;
-        transform: translateX(-50%) scale(1);
+        opacity: 0.65;
+        transform: translateX(-50%) translateY(-10px) scale(0.98);
     }
     50% {
-        opacity: 0.45;
-        transform: translateX(-50%) scale(1.02);
+        opacity: 1;
+        transform: translateX(-50%) translateY(5px) scale(1.02);
     }
 }
 @media only screen and (max-width: 700px) {
     body::after {
-        width: 200%;
+        width: 220%;
         height: 100%;
+        top: 25%;
         background: radial-gradient(
-            ellipse 180% 100% at 50% 30%,
-            #0A0A0A 30%,
-            #2979FF 45%,
-            #FF80AB 55%,
-            #FF6D00 65%,
-            #FFD600 75%,
-            #00E676 85%,
-            #3D5AFE 100%
+            ellipse 100% 110% at 0% 0%,
+            #020203 35%,
+            #0B0F1F 48%,
+            #1E54AE 62%,
+            #3879F9 73%,
+            #E97FB3 86%,
+            #FF6F17 98%,
         );
     }
 }

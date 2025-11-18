@@ -36,15 +36,17 @@
 .EducationRightSection h2{
     font-size: 20px;
     font-weight: normal;
+    color: #e5e7eb;
 }
 .EducationRightSection h3{
     font-size: 16px;
     font-weight: normal;
-    color: #494949;
+    color: #9ca3af;
     margin-top: -15px;
 }
 .EducationRightSection p{
     font-size: 16px;
     font-weight: normal;
     max-width: 350px;
+    color: #d1d5db;
 }

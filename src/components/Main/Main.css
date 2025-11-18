@@ -56,6 +56,7 @@
 .scrollArrow p{
     margin-right: 5px;
     font-family: Comfortaa;
+    color: #e5e7eb;
 }
 .scrollArrow::before{
     content: '';
@@ -64,8 +65,8 @@
 	left: 18px;
 	width: 18px;
 	height: 18px;
-	border-left: 2px solid #333;
-  	border-bottom: 2px solid #333;
+	border-left: 2px solid #e5e7eb;
+  	border-bottom: 2px solid #e5e7eb;
 	transform: rotate(-45deg);
 }
 @keyframes down {

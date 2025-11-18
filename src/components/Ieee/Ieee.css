@@ -2,8 +2,12 @@
     margin-top: 200px;
     font-family: Comfortaa;
 }
+.IeeeParent h1{
+    color: #e5e7eb;
+}
 .IeeeParent h2{
     font-weight: normal;
+    color: #e5e7eb;
 }
 .IeeeDate{
     color: #FEC900;

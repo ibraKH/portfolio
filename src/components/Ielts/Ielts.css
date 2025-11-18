@@ -2,8 +2,12 @@
     margin-top: 100px;
     font-family: Comfortaa;
 }
+.Ielts h1{
+    color: #e5e7eb;
+}
 .Ielts h2{
     font-size: 25px;
+    color: #e5e7eb;
 }
 .Ielts i{
     font-style: normal;
@@ -24,6 +28,7 @@
 .scoreContainer h4{
     font-weight: normal;
     font-size: larger;
+    color: #d1d5db;
 }
 @media only screen and (max-width: 650px) {
     .scoreContainer{

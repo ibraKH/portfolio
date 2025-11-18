@@ -10,7 +10,7 @@
     width: 80%;
     left: 10%;
     top: 0;
-    background-color: #E6ECF8;
+    background-color: #334155;
 }
 .FooterContainer{
     padding-top: 50px;
@@ -26,6 +26,7 @@
 }
 .FooterText h1{
     font-size: x-large;
+    color: #e5e7eb;
 }
 .FooterLinks{
     display: grid;
@@ -48,6 +49,7 @@
 }
 .Footer p{
     margin-top: 50px;
+    color: #9ca3af;
 }
 @media only screen and (max-width: 650px) {
     .FooterText{

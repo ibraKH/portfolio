@@ -1,0 +1,123 @@
+---
+import "../styles/index.css";
+import "../styles/vision.css";
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+const {
+  title = "Ibrahim Alharthi | Machine Learning Engineer",
+  description = "Ibrahim Alharthi is a machine learning engineer working on computer vision and AI systems. Case studies in multimodal AI, few-shot vision-language learning and collaborative scientific software.",
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-latin.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={new URL("/social-preview.png", Astro.site)}
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Ibrahim Alharthi. Computer Vision & AI Systems."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="header wrap">
+      <a class="wordmark" href="/" aria-label="ibra, Ibrahim Alharthi home">
+        ibra<span aria-hidden="true">.</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="/#work">Work</a>
+        <a href="/#experience">Experience</a>
+        <a href="/#about">About</a>
+        <a href="/Ibrahim-Alharthi-CV.pdf" download>
+          CV <span aria-hidden="true">↓</span>
+        </a>
+        <a href="/#contact">
+          Contact <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="wrap footer">
+      <a class="wordmark" href="/" aria-label="ibra, back to home">
+        ibra<span aria-hidden="true">.</span>
+      </a>
+      <p>© {year} Ibrahim Alharthi. Designed and built in Canberra.</p>
+      <a class="text-link" href="#main">
+        Back to top <span aria-hidden="true">↑</span>
+      </a>
+    </footer>
+    <script>
+      const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (!motion.matches && "IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("revealed");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08 },
+        );
+        document
+          .querySelectorAll("[data-reveal]")
+          .forEach((el) => observer.observe(el));
+      }
+      const links =
+        document.querySelectorAll<HTMLAnchorElement>('nav a[href^="/#"]');
+      if ("IntersectionObserver" in window) {
+        const sections = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((entry) => {
+              if (entry.isIntersecting)
+                links.forEach((link) => {
+                  if (link.hash === "#" + entry.target.id)
+                    link.setAttribute("aria-current", "location");
+                  else link.removeAttribute("aria-current");
+                });
+            }),
+          { rootMargin: "-10% 0px -65% 0px" },
+        );
+        document
+          .querySelectorAll("main section[id]")
+          .forEach((el) => sections.observe(el));
+      }
+    </script>
+  </body>
+</html>

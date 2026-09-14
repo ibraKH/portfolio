@@ -138,6 +138,16 @@ assert.ok(
   (await page.locator(".visual-notes").first().getAttribute("open")) !== null,
 );
 report.journeys.push("Native diagram disclosure");
+await page.setViewportSize({ width: 375, height: 812 });
+await page.goto(report.environment.base);
+const menu = page.locator("#site-menu");
+const isOpen = () => menu.evaluate((el) => el.matches(":popover-open"));
+await page.getByRole("button", { name: "Menu", exact: true }).click();
+assert.ok(await isOpen(), "mobile menu opens");
+await menu.getByRole("link", { name: "Experience", exact: true }).click();
+await page.waitForURL("**/#experience");
+assert.equal(await isOpen(), false, "mobile menu closes after navigating");
+report.journeys.push("Mobile menu opens, navigates and closes");
 const dp = page.waitForEvent("download");
 await page
   .getByRole("link", { name: "Download CV", exact: true })

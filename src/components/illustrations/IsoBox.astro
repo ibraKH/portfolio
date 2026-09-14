@@ -1,0 +1,14 @@
+---
+interface Props {
+  faces: { top: string; left: string; right: string };
+  top: string;
+  left: string;
+  right: string;
+  stroke?: string;
+}
+const { faces, top, left, right, stroke = "none" } = Astro.props;
+---
+
+<path d={faces.left} fill={left} stroke={stroke} stroke-width="0.8" stroke-linejoin="round" />
+<path d={faces.right} fill={right} stroke={stroke} stroke-width="0.8" stroke-linejoin="round" />
+<path d={faces.top} fill={top} stroke={stroke} stroke-width="0.8" stroke-linejoin="round" />

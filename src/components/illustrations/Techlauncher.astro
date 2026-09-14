@@ -1,0 +1,253 @@
+---
+import IsoBox from "./IsoBox.astro";
+import { iso, line, box, leftText, chipWidth } from "./iso";
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+
+// The shared editor: an ecosystem model several researchers work on at once.
+const nodes = [
+  { label: "Rainfall", x: 84, y: 158, dot: "#5b82e6" },
+  { label: "Soil moisture", x: 316, y: 146, dot: "#7592b9" },
+  { label: "Vegetation", x: 316, y: 290, dot: "#2455d6", locked: true },
+  { label: "Grazing", x: 520, y: 206, dot: "#7592b9" },
+  { label: "Fire risk", x: 520, y: 356, dot: "#202632" },
+  { label: "Carbon", x: 84, y: 330, dot: "#5b82e6" },
+];
+const edges = [
+  "M234 182C275 182 275 170 316 170",
+  "M234 182C282 182 270 314 314 314",
+  "M391 194V288",
+  "M316 314C282 314 272 354 236 354",
+];
+const liveEdges = ["M466 314C495 314 490 230 518 230", "M466 314C495 314 490 380 518 380"];
+const avatars = [
+  { x: 606, fill: "#202632", initial: "A" },
+  { x: 628, fill: "#2455d6", initial: "B" },
+  { x: 650, fill: "#5b82e6", initial: "C" },
+];
+const cursor = "M0 0V19L5 14.5L8.6 22.5L11.7 21.1L8.2 13.4H14.6Z";
+const snapshots = [
+  { x: 220, label: "v1" },
+  { x: 360, label: "v2" },
+  { x: 500, label: "v3", current: true },
+];
+
+// The backend underneath, as a stack of isometric slabs.
+const s = iso([850, 300], 22);
+const slabs = [
+  { z: 0, label: "POSTGIS", top: "#e6edf9", left: "#c3d3f3", right: "#9fb6e6", ink: "#202632" },
+  { z: 1.9, label: "API · RBAC", top: "#e6edf9", left: "#c3d3f3", right: "#9fb6e6", ink: "#202632" },
+  { z: 3.8, label: "REALTIME", top: "#2455d6", left: "#1d47b3", right: "#173a92", ink: "#ffffff" },
+].map((slab) => ({
+  ...slab,
+  faces: box(s, 0, 0, 4, 4, 0.9, slab.z),
+  text: leftText(s(0.5, 4, slab.z + 0.27)),
+}));
+const risers = [
+  [0.9, 1.9],
+  [2.8, 3.8],
+]
+  .flatMap(([a, b]) => [
+    line(s(0, 4, a), s(0, 4, b)),
+    line(s(4, 4, a), s(4, 4, b)),
+    line(s(4, 0, a), s(4, 0, b)),
+  ])
+  .join("");
+const presence = s(2, 2, 4.7);
+const ci = [
+  { label: "TEST", x: 744, w: 62 },
+  { label: "BUILD", x: 816, w: 70 },
+  { label: "DOCKER", x: 896, w: 80 },
+];
+---
+
+<svg
+  class="illustration"
+  viewBox="0 0 1000 620"
+  width="1000"
+  height="620"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <pattern id="tl-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.9" fill="#dfe5ee"></circle>
+    </pattern>
+    <marker id="tl-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#9fb1c9"></path>
+    </marker>
+  </defs>
+  <text class="mono" x="40" y="50" font-size="12" fill="#4e5b6d">
+    FIG. 03 / ONE MODEL, MANY HANDS
+  </text>
+
+  <rect x="48" y="86" width="650" height="452" rx="10" fill="#e2e8f1" />
+  <rect x="40" y="76" width="650" height="452" rx="10" fill="#ffffff" stroke="#d5dce5" />
+  <path d="M40 116V86a10 10 0 0 1 10-10H680a10 10 0 0 1 10 10V116Z" fill="#f7f9fc" />
+  <path d="M40 116H690" stroke="#d5dce5" />
+  <circle cx="60" cy="96" r="4.5" fill="#d5dce5" />
+  <circle cx="76" cy="96" r="4.5" fill="#d5dce5" />
+  <circle cx="92" cy="96" r="4.5" fill="#d5dce5" />
+  <text class="mono" x="112" y="100" font-size="11" fill="#596575">ECOSYSTEM MODEL / SHARED</text>
+  {
+    avatars.map((a) => (
+      <g>
+        <circle cx={a.x} cy="96" r="12" fill={a.fill} stroke="#f7f9fc" stroke-width="2.5" />
+        <text x={a.x} y="100" font-size="11" font-weight="500" fill="#ffffff" text-anchor="middle">
+          {a.initial}
+        </text>
+      </g>
+    ))
+  }
+  <rect x="41" y="117" width="648" height="400" fill="url(#tl-dots)" />
+
+  {edges.map((d) => <path d={d} fill="none" stroke="#9fb1c9" stroke-width="1.5" marker-end="url(#tl-arrow)" />)}
+  {
+    liveEdges.map((d) => (
+      <g>
+        <path d={d} fill="none" stroke="#9fb1c9" stroke-width="1.5" marker-end="url(#tl-arrow)" />
+        <path class="flow" d={d} fill="none" stroke="#2455d6" stroke-width="1.5" />
+      </g>
+    ))
+  }
+
+  {
+    nodes.map((n) => (
+      <g>
+        <rect
+          x={n.x}
+          y={n.y}
+          width="150"
+          height="48"
+          rx="8"
+          fill={n.locked ? "#f4f7ff" : "#ffffff"}
+          stroke={n.locked ? "#2455d6" : "#c9d4e2"}
+          stroke-width={n.locked ? 2 : 1}
+        />
+        <circle cx={n.x + 18} cy={n.y + 24} r="5" fill={n.dot} />
+        <text x={n.x + 32} y={n.y + 30} font-size="16" fill="#202632">
+          {n.label}
+        </text>
+      </g>
+    ))
+  }
+
+  <g transform="rotate(-90 466 290)">
+    <circle cx="466" cy="290" r="19" fill="none" stroke="#dce8ff" stroke-width="2.5" />
+    <circle
+      class="tl-timer"
+      cx="466"
+      cy="290"
+      r="19"
+      fill="none"
+      stroke="#2455d6"
+      stroke-width="2.5"
+      stroke-dasharray="119.4"
+    />
+  </g>
+  <circle cx="466" cy="290" r="13" fill="#2455d6" stroke="#ffffff" stroke-width="2" />
+  <rect x="460.5" y="289" width="11" height="8" rx="1.5" fill="#ffffff" />
+  <path d="M462.5 289v-2.5a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="#ffffff" stroke-width="1.6" />
+  <rect x="316" y="344" width={chipWidth("HELD BY A", 10)} height="17" rx="3" fill="#dce8ff" />
+  <text class="mono" x="324" y="356" font-size="10" fill="#2455d6">HELD BY A</text>
+
+  <rect x="478" y="427" width="206" height="92" rx="8" fill="#e3e9f2" />
+  <rect x="474" y="422" width="206" height="92" rx="8" fill="#ffffff" stroke="#d5dce5" />
+  <path d="M583 423L595 408L607 423" fill="#ffffff" stroke="#d5dce5" />
+  <path d="M584 422.5H606" stroke="#ffffff" stroke-width="2" />
+  <circle cx="496" cy="446" r="10" fill="#2455d6" />
+  <text x="496" y="450" font-size="10" font-weight="500" fill="#ffffff" text-anchor="middle">B</text>
+  <rect x="514" y="439" width="130" height="7" rx="3.5" fill="#d5dce5" />
+  <rect x="514" y="452" width="96" height="7" rx="3.5" fill="#d5dce5" />
+  <path d="M496 458V486H507" fill="none" stroke="#d5dce5" />
+  <circle cx="518" cy="488" r="9" fill="#5b82e6" />
+  <text x="518" y="492" font-size="10" font-weight="500" fill="#ffffff" text-anchor="middle">C</text>
+  {
+    [0, 1, 2].map((i) => (
+      <circle
+        class="tl-dot"
+        cx={538 + i * 10}
+        cy="488"
+        r="3"
+        fill="#7592b9"
+        style={`animation-delay:${i * 0.15}s`}
+      />
+    ))
+  }
+
+  <g transform="translate(420 318)">
+    <g class="tl-jiggle">
+      <path d={cursor} fill="#202632" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" />
+      <rect x="12" y="20" width={chipWidth("Researcher A", 10)} height="18" rx="4" fill="#202632" />
+      <text class="mono" x="19" y="32" font-size="10" fill="#ffffff">Researcher A</text>
+    </g>
+  </g>
+  <g class="tl-cursor-b" transform="translate(560 238)">
+    <path d={cursor} fill="#2455d6" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" />
+    <rect x="12" y="20" width={chipWidth("Researcher B", 10)} height="18" rx="4" fill="#2455d6" />
+    <text class="mono" x="19" y="32" font-size="10" fill="#ffffff">Researcher B</text>
+  </g>
+
+  <text class="mono" x="40" y="570" font-size="11" fill="#596575">SNAPSHOTS</text>
+  <path d="M140 566H560" stroke="#9fb1c9" stroke-width="1.5" />
+  <path d="M560 566H690" stroke="#9fb1c9" stroke-width="1.5" stroke-dasharray="3 5" />
+  {
+    snapshots.map((m) => (
+      <g>
+        {m.current && (
+          <circle class="pulse" cx={m.x} cy="566" r="14" fill="none" stroke="#2455d6" stroke-width="1.5" />
+        )}
+        <rect
+          x={m.x - 6}
+          y="560"
+          width="12"
+          height="12"
+          fill={m.current ? "#2455d6" : "#ffffff"}
+          stroke={m.current ? "#2455d6" : "#7592b9"}
+          stroke-width="1.5"
+          transform={`rotate(45 ${m.x} 566)`}
+        />
+        <text class="mono" x={m.x} y="596" font-size="11" fill="#596575" text-anchor="middle">
+          {m.label}
+        </text>
+      </g>
+    ))
+  }
+  <rect x="634" y="560" width="12" height="12" fill="#f3f6fa" stroke="#9fb1c9" stroke-dasharray="2 2" transform="rotate(45 640 566)" />
+  <text class="mono" x="640" y="596" font-size="11" fill="#8b97a8" text-anchor="middle">next</text>
+
+  <path class="flow" d="M690 250H772" fill="none" stroke="#2455d6" stroke-width="1.6" />
+  <text class="mono" x="774" y="178" font-size="11" fill="#596575">BACKEND</text>
+  {
+    slabs.map((slab, i) => (
+      <g>
+        <IsoBox faces={slab.faces} top={slab.top} left={slab.left} right={slab.right} stroke="#8baff7" />
+        <text class="mono" transform={slab.text} font-size="11" fill={slab.ink}>
+          {slab.label}
+        </text>
+        {i === 0 && <path class="flow" d={risers} fill="none" stroke="#2455d6" stroke-width="1.5" />}
+      </g>
+    ))
+  }
+  <ellipse class="pulse" cx={presence[0]} cy={presence[1]} rx="34" ry="17" fill="none" stroke="#ffffff" stroke-width="1.5" />
+
+  <path class="flow" d="M850 392V440" fill="none" stroke="#2455d6" stroke-width="1.5" />
+  <text class="mono" x="744" y="432" font-size="11" fill="#596575">CI</text>
+  <path d="M806 457H816M886 457H896" stroke="#9fb1c9" />
+  {
+    ci.map((c, i) => (
+      <g>
+        <rect x={c.x} y="442" width={c.w} height="30" rx="15" fill="#ffffff" stroke="#d5dce5" />
+        <g class="tl-check" style={`animation-delay:${i * 0.8}s`}>
+          <circle cx={c.x + 15} cy="457" r="8" fill="#2455d6" />
+          <path d={`M${c.x + 11} 457l3 3 5-6`} fill="none" stroke="#ffffff" stroke-width="1.8" />
+        </g>
+        <text class="mono" x={c.x + 28} y="461" font-size="11" fill="#202632">
+          {c.label}
+        </text>
+      </g>
+    ))
+  }
+</svg>

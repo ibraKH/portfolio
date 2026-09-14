@@ -1,4 +1,9 @@
 ---
+import Roya from "./illustrations/Roya.astro";
+import Clip from "./illustrations/Clip.astro";
+import Techlauncher from "./illustrations/Techlauncher.astro";
+import Nanogpt from "./illustrations/Nanogpt.astro";
+import "../styles/illustrations.css";
 interface Props {
   slug: string;
   title: string;
@@ -8,6 +13,13 @@ interface Props {
 }
 const { slug, title, caption, design, href } = Astro.props;
 const Media = href ? "a" : "div";
+const illustrations = {
+  roya: Roya,
+  clip: Clip,
+  techlauncher: Techlauncher,
+  nanogpt: Nanogpt,
+};
+const Illustration = illustrations[slug as keyof typeof illustrations];
 ---
 
 <figure
@@ -15,14 +27,7 @@ const Media = href ? "a" : "div";
   style={`view-transition-name: visual-${slug}`}
 >
   <Media href={href} class="project-media">
-    <img
-      src={`/illustrations/${slug}.svg`}
-      width="1000"
-      height="620"
-      loading="lazy"
-      decoding="async"
-      alt={`${title}: ${caption}`}
-    />
+    <Illustration label={`${title}: ${caption}`} />
   </Media>
   <figcaption>{caption}</figcaption>
   <details class="visual-notes">
@@ -36,3 +41,17 @@ const Media = href ? "a" : "div";
     </ol>
   </details>
 </figure>
+
+<script>
+  // Illustration motion only runs while the figure is on screen.
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) =>
+      entries.forEach((entry) =>
+        entry.target.classList.toggle("is-paused", !entry.isIntersecting),
+      ),
+    );
+    document
+      .querySelectorAll(".illustration")
+      .forEach((el) => observer.observe(el));
+  }
+</script>

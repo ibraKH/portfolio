@@ -467,11 +467,6 @@ nav a[aria-current]:after {
   background: var(--surface);
   overflow: hidden;
 }
-.project-visual img {
-  width: 100%;
-  height: auto;
-  transition: transform 450ms var(--ease);
-}
 .project-visual figcaption {
   font: 9px var(--mono);
   padding: 13px 18px;
@@ -484,8 +479,8 @@ nav a[aria-current]:after {
   display: block;
   min-width: 0;
 }
-.visual-link:hover img,
-.project-media:focus-visible img {
+.visual-link:hover .illustration,
+.project-media:focus-visible .illustration {
   transform: translateY(-5px);
 }
 .project-detail {
@@ -753,9 +748,8 @@ nav a[aria-current]:after {
 .case-study > .project-visual {
   max-width: 1100px;
 }
-.case-study > .project-visual img {
+.case-study > .project-visual .illustration {
   max-height: 580px;
-  object-fit: contain;
 }
 .case-body {
   display: grid;
@@ -1417,6 +1411,6 @@ nav a[aria-current]:after {
   line-height: 1.8;
   animation: entrance 350ms var(--ease);
 }
-.project-visual:has(.visual-notes[open]) img {
+.project-visual:has(.visual-notes[open]) .illustration {
   transform: translateY(-5px);
 }

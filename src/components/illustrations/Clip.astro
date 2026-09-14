@@ -1,0 +1,262 @@
+---
+import { chipWidth } from "./iso";
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+
+// Labelled examples, fanned like cards on a desk.
+const tiles = [
+  { x: 56, y: 96, rot: -4, name: "mountain" },
+  { x: 66, y: 216, rot: 3, name: "flower" },
+  { x: 56, y: 336, rot: -2, name: "boat" },
+];
+const petals = [0, 1, 2, 3, 4, 5].map((k) => ({
+  cx: 75 + 9 * Math.cos((k * Math.PI) / 3),
+  cy: 36 + 9 * Math.sin((k * Math.PI) / 3),
+}));
+
+// Two encoders that taper toward a shared embedding.
+const taper = (x: number, top: number, bottom: number, amount: number) => ({
+  y0: top + ((x - 330) / 170) * amount,
+  y1: bottom - ((x - 330) / 170) * amount,
+});
+const layerXs = [408, 426, 444, 462, 480];
+const imageLayers = layerXs.map((x) => ({ x, ...taper(x, 140, 330, 50) }));
+const textLayers = layerXs.map((x) => ({ x, ...taper(x, 390, 520, 35) }));
+const adapter = imageLayers[2];
+
+// The embedding sphere, with one cluster per class and a support example at each centre.
+const sphere = { cx: 772, cy: 292, r: 172 };
+const scatter = [[-20, -6], [14, -14], [24, 8], [-6, 16], [-26, 12], [6, 2], [-12, -18]];
+const clusters = [
+  { name: "mountain", cx: 700, cy: 208, color: "#7592b9", chip: [626, 160] },
+  { name: "flower", cx: 856, cy: 244, color: "#5b82e6", chip: [872, 196] },
+  { name: "boat", cx: 790, cy: 388, color: "#202632", chip: [826, 420] },
+];
+const query = { x: 738, y: 262 };
+const nearest = clusters[0];
+
+const learned = ["V1", "V2", "V3"];
+const methods = [
+  { n: "1", text: "TIP-ADAPTER++ CACHE", x: 40 },
+  { n: "2", text: "COOP / COCOOP PROMPT", x: 330 },
+  { n: "3", text: "PEFT ADAPTER", x: 640 },
+];
+---
+
+<svg
+  class="illustration"
+  viewBox="0 0 1000 620"
+  width="1000"
+  height="620"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <pattern id="clip-dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#d5dce5"></circle>
+    </pattern>
+    <radialGradient id="clip-sphere" cx="0.38" cy="0.32" r="0.75">
+      <stop offset="0" stop-color="#ffffff"></stop>
+      <stop offset="0.7" stop-color="#eef3fd"></stop>
+      <stop offset="1" stop-color="#d9e5fb"></stop>
+    </radialGradient>
+  </defs>
+  <rect width="1000" height="620" fill="url(#clip-dots)" />
+  <text class="mono" x="40" y="50" font-size="12" fill="#4e5b6d">
+    FIG. 02 / ONE SPACE FOR IMAGES AND WORDS
+  </text>
+  <text class="mono" x="56" y="82" font-size="11" fill="#596575">A FEW LABELLED EXAMPLES</text>
+
+  <path d="M206 151C270 151 270 190 330 190" class="flow" fill="none" stroke="#9fb1c9" stroke-width="1.5" />
+  <path d="M216 271C272 271 272 235 330 235" class="flow" fill="none" stroke="#9fb1c9" stroke-width="1.5" />
+  <path d="M206 391C270 391 270 285 330 285" class="flow" fill="none" stroke="#9fb1c9" stroke-width="1.5" />
+
+  {
+    tiles.map((tile) => (
+      <g transform={`translate(${tile.x} ${tile.y}) rotate(${tile.rot} 75 55)`}>
+        <rect x="3" y="5" width="150" height="110" rx="6" fill="#e3e9f2" />
+        <rect width="150" height="110" rx="6" fill="#ffffff" stroke="#d5dce5" />
+        {tile.name === "mountain" && (
+          <g>
+            <rect x="8" y="8" width="134" height="70" rx="3" fill="#dfe8f6" />
+            <circle cx="116" cy="26" r="9" fill="#2455d6" />
+            <path d="M8 78L44 38L70 62L96 34L142 78Z" fill="#7592b9" />
+            <path d="M96 34L89 42H103Z" fill="#ffffff" />
+            <path d="M8 78L30 62L60 78Z" fill="#5d7aa3" />
+          </g>
+        )}
+        {tile.name === "flower" && (
+          <g>
+            <rect x="8" y="8" width="134" height="70" rx="3" fill="#e9eefb" />
+            <path d="M75 78V46" stroke="#5f7ea8" stroke-width="2" />
+            <ellipse cx="84" cy="62" rx="8" ry="4" fill="#7592b9" transform="rotate(-30 84 62)" />
+            {petals.map((pt) => (
+              <circle cx={pt.cx} cy={pt.cy} r="7" fill="#8baff7" />
+            ))}
+            <circle cx="75" cy="36" r="5" fill="#2455d6" />
+          </g>
+        )}
+        {tile.name === "boat" && (
+          <g>
+            <rect x="8" y="8" width="134" height="70" rx="3" fill="#dbe6f5" />
+            <rect x="8" y="60" width="134" height="18" fill="#b9cdeb" />
+            <path d="M12 66q8-4 16 0t16 0t16 0t16 0t16 0t16 0t16 0t16 0" fill="none" stroke="#ffffff" />
+            <path d="M46 58H108L98 68H56Z" fill="#202632" />
+            <path d="M76 20V58" stroke="#202632" stroke-width="1.5" />
+            <path d="M78 22V55H104Z" fill="#ffffff" stroke="#9fb1c9" />
+            <path d="M74 27V55H54Z" fill="#dce8ff" />
+          </g>
+        )}
+        <circle cx="16" cy="94" r="3" fill="#2455d6" />
+        <text class="mono" x="25" y="98" font-size="12" fill="#202632">
+          {tile.name}
+        </text>
+      </g>
+    ))
+  }
+
+  <text class="mono" x="56" y="472" font-size="11" fill="#596575">PROMPT</text>
+  <text class="mono" x="56" y="494" font-size="13" fill="#8b97a8">“a photo of a”</text>
+  <path d="M56 489H172" stroke="#8b97a8" />
+  {
+    learned.map((t, i) => (
+      <g>
+        <rect x={56 + i * 44} y="506" width="40" height="32" rx="4" fill="#dce8ff" stroke="#2455d6" />
+        <text class="mono" x={76 + i * 44} y="527" font-size="13" fill="#2455d6" text-anchor="middle">
+          {t}
+        </text>
+      </g>
+    ))
+  }
+  <rect x="188" y="506" width="64" height="32" rx="4" fill="#ffffff" stroke="#d5dce5" />
+  <text class="mono" x="220" y="527" font-size="13" fill="#202632" text-anchor="middle">boat</text>
+  <path d="M252 522C290 522 295 455 330 455" class="flow" fill="none" stroke="#9fb1c9" stroke-width="1.5" />
+
+  <path d="M330 140L500 190V280L330 330Z" fill="#202632" />
+  <text class="mono" x="344" y="240" font-size="12" fill="#aab6c8">IMAGE</text>
+  {
+    imageLayers.map((l, i) =>
+      l === adapter ? (
+        <rect x={l.x - 4} y={l.y0 + 8} width="8" height={l.y1 - l.y0 - 16} rx="2" fill="#2455d6" />
+      ) : (
+        <path
+          class="clip-layer"
+          d={`M${l.x} ${l.y0 + 10}V${l.y1 - 10}`}
+          stroke="#3b4a63"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          style={`animation-delay:${i * 0.18}s`}
+        />
+      ),
+    )
+  }
+  <path d="M330 390L500 425V485L330 520Z" fill="#202632" />
+  <text class="mono" x="344" y="460" font-size="12" fill="#aab6c8">TEXT</text>
+  {
+    textLayers.map((l, i) => (
+      <path
+        class="clip-layer"
+        d={`M${l.x} ${l.y0 + 8}V${l.y1 - 8}`}
+        stroke="#3b4a63"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        style={`animation-delay:${0.9 + i * 0.18}s`}
+      />
+    ))
+  }
+  <text x="330" y="372" font-size="26" font-weight="500" fill="#202632">CLIP</text>
+  <text class="mono" x="398" y="370" font-size="10" fill="#596575">PRETRAINED</text>
+
+  <ellipse cx={sphere.cx} cy={sphere.cy + sphere.r + 12} rx="130" ry="12" fill="#dbe3ee" />
+  <circle cx={sphere.cx} cy={sphere.cy} r={sphere.r} fill="url(#clip-sphere)" stroke="#b9cdfb" stroke-width="1.5" />
+  <ellipse cx={sphere.cx} cy={sphere.cy} rx={sphere.r} ry="42" fill="none" stroke="#c7d6f5" />
+  <ellipse cx={sphere.cx} cy={sphere.cy - 86} rx="149" ry="36" fill="none" stroke="#d5e1f8" />
+  <ellipse cx={sphere.cx} cy={sphere.cy + 86} rx="149" ry="36" fill="none" stroke="#d5e1f8" />
+  <ellipse class="clip-spin" cx={sphere.cx} cy={sphere.cy} rx="86" ry={sphere.r} fill="none" stroke="#c7d6f5" />
+  <ellipse
+    class="clip-spin"
+    cx={sphere.cx}
+    cy={sphere.cy}
+    rx="150"
+    ry={sphere.r}
+    fill="none"
+    stroke="#d5e1f8"
+    style="animation-delay:-4.5s"
+  />
+
+  <path class="flow" d={`M500 235C600 235 640 ${query.y} ${query.x - 14} ${query.y}`} fill="none" stroke="#2455d6" stroke-width="1.8" />
+  <path class="flow" d="M500 455C620 455 700 420 781 396" fill="none" stroke="#2455d6" stroke-width="1.8" />
+
+  {
+    clusters.map((c) => (
+      <path
+        class={c === nearest ? "flow" : undefined}
+        d={`M${c.cx} ${c.cy}L${query.x} ${query.y}`}
+        stroke={c === nearest ? "#2455d6" : "#9fb1c9"}
+        stroke-width={c === nearest ? 2 : 1.2}
+        stroke-dasharray={c === nearest ? undefined : "3 5"}
+      />
+    ))
+  }
+  {
+    clusters.map((c) => (
+      <g>
+        {scatter.map(([dx, dy]) => (
+          <circle cx={c.cx + dx} cy={c.cy + dy} r="4" fill={c.color} fill-opacity="0.75" />
+        ))}
+        <circle cx={c.cx} cy={c.cy} r="15" fill="none" stroke={c.color} stroke-opacity="0.35" />
+        <circle cx={c.cx} cy={c.cy} r="9" fill={c.color} stroke="#ffffff" stroke-width="2.5" />
+        <rect x={c.chip[0]} y={c.chip[1]} width={chipWidth(c.name)} height="18" rx="3" fill="#ffffff" stroke="#d5dce5" />
+        <text class="mono" x={c.chip[0] + 8} y={c.chip[1] + 13} font-size="12" fill="#202632">
+          {c.name}
+        </text>
+      </g>
+    ))
+  }
+  <circle class="pulse" cx={query.x} cy={query.y} r="16" fill="none" stroke="#2455d6" stroke-width="2" />
+  <rect
+    x={query.x - 8}
+    y={query.y - 8}
+    width="16"
+    height="16"
+    fill="#2455d6"
+    stroke="#ffffff"
+    stroke-width="2.5"
+    transform={`rotate(45 ${query.x} ${query.y})`}
+  />
+  <rect x={query.x + 14} y={query.y + 8} width={chipWidth("new image")} height="18" rx="3" fill="#2455d6" />
+  <text class="mono" x={query.x + 22} y={query.y + 21} font-size="12" fill="#ffffff">new image</text>
+
+  <rect x="578" y="474" width="70" height="44" rx="4" fill="#ffffff" stroke="#d5dce5" />
+  <rect x="572" y="480" width="70" height="44" rx="4" fill="#ffffff" stroke="#d5dce5" />
+  <rect x="566" y="486" width="70" height="44" rx="4" fill="#ffffff" stroke="#b9cdfb" />
+  <rect x="575" y="497" width="8" height="8" rx="1" fill="#2455d6" />
+  <rect x="589" y="499" width="38" height="5" rx="2.5" fill="#d5dce5" />
+  <rect x="575" y="512" width="8" height="8" rx="1" fill="#7592b9" />
+  <rect x="589" y="514" width="30" height="5" rx="2.5" fill="#d5dce5" />
+
+  <g font-size="11">
+    <circle cx="560" cy="476" r="10" fill="#2455d6" stroke="#ffffff" stroke-width="2" />
+    <text class="mono" x="560" y="480" fill="#ffffff" text-anchor="middle">1</text>
+    <circle cx="270" cy="522" r="10" fill="#2455d6" stroke="#ffffff" stroke-width="2" />
+    <text class="mono" x="270" y="526" fill="#ffffff" text-anchor="middle">2</text>
+    <circle cx={adapter.x} cy={adapter.y0 - 12} r="10" fill="#2455d6" stroke="#ffffff" stroke-width="2" />
+    <text class="mono" x={adapter.x} y={adapter.y0 - 8} fill="#ffffff" text-anchor="middle">3</text>
+  </g>
+
+  {
+    methods.map((m) => (
+      <g>
+        <circle cx={m.x + 9} cy="586" r="9" fill="none" stroke="#2455d6" stroke-width="1.5" />
+        <text class="mono" x={m.x + 9} y="590" font-size="10" fill="#2455d6" text-anchor="middle">
+          {m.n}
+        </text>
+        <text class="mono" x={m.x + 26} y="590" font-size="11" fill="#4e5b6d">
+          {m.text}
+        </text>
+      </g>
+    ))
+  }
+</svg>

@@ -96,7 +96,7 @@ export const projects = [
       "The backend code is public. The ownership figures come from the contribution audit, not something you can read off the repository. I’m not claiming users or uptime. The design call I’d defend is the split between locks and snapshots: expiring locks stop two people editing the same node at once, and snapshots mark the moments worth coming back to.",
     source: "https://github.com/ibraKH/tern_backend",
     sourceLabel: "Explore the backend",
-    caption: "Architecture sketch · drawn from the real components",
+    caption: "Collaboration sketch · based on the real features",
   },
   {
     slug: "nanogpt",

@@ -1,0 +1,174 @@
+---
+import IsoBox from "./IsoBox.astro";
+import { iso, box } from "./iso";
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+
+// Three identical transformer stacks: same depth, same settings, same data.
+const layers = 8;
+const towers = [520, 690, 860].map((cx, t) => {
+  const p = iso([cx, 400], 21);
+  return {
+    cx,
+    run: `RUN 0${t + 1}`,
+    base: box(p, -0.25, -0.25, 3.5, 3.5, 0.3),
+    slabs: Array.from({ length: layers }, (_, i) => box(p, 0, 0, 3, 3, 0.48, 0.45 + i * 0.66)),
+  };
+});
+const knobs = [0.3, 0.72, 0.5];
+
+// A sentence the way a GPT-2 style tokenizer splits it (Ġ marks a leading space).
+let cursor = 60;
+const tokens = ["The", "Ġkook", "ab", "urra", "Ġlaughs"].map((text) => {
+  const w = Math.round(text.length * 13 * 0.62 + 16);
+  const token = { text, x: cursor, w };
+  cursor += w + 5;
+  return token;
+});
+const tokensEnd = cursor - 5;
+const pageLines = [70, 56, 64, 48, 66, 40];
+const cells = Array.from({ length: 48 }, (_, i) => 300 + i * 13.6);
+---
+
+<svg
+  class="illustration"
+  viewBox="0 0 1000 620"
+  width="1000"
+  height="620"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <marker id="ng-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#2455d6"></path>
+    </marker>
+  </defs>
+  <text class="mono" x="40" y="50" font-size="12" fill="#4e5b6d">
+    FIG. 04 / SAME RECIPE, THREE RUNS
+  </text>
+
+  {
+    [
+      { x: 60, name: "TRAIN" },
+      { x: 206, name: "EVAL" },
+    ].map((stack) => (
+      <g>
+        <rect x={stack.x + 12} y="80" width="96" height="118" rx="4" fill="#ffffff" stroke="#d5dce5" />
+        <rect x={stack.x + 6} y="86" width="96" height="118" rx="4" fill="#ffffff" stroke="#d5dce5" />
+        <rect x={stack.x} y="92" width="96" height="118" rx="4" fill="#ffffff" stroke="#b9c7d8" />
+        {pageLines.map((w, k) => (
+          <rect x={stack.x + 12} y={108 + k * 14} width={w} height="5" rx="2.5" fill="#d5dce5" />
+        ))}
+        <text class="mono" x={stack.x} y="230" font-size="11" fill="#202632">
+          {stack.name}
+        </text>
+      </g>
+    ))
+  }
+  <path class="flow" d="M108 238V286" fill="none" stroke="#2455d6" stroke-width="2" marker-end="url(#ng-arrow)" />
+  <path d="M254 238V262" stroke="#9fb1c9" stroke-width="1.5" stroke-dasharray="3 4" />
+  <path d="M248 266L260 278M260 266L248 278" stroke="#4e5b6d" stroke-width="2" />
+  <text class="mono" x="266" y="276" font-size="10" fill="#596575">never seen</text>
+
+  <rect x="60" y="290" width="250" height="94" rx="8" fill="#202632" />
+  <text class="mono" x="78" y="314" font-size="10" fill="#8baff7">BPE / FIT ON TRAIN ONLY</text>
+  <text class="mono" x="78" y="342" font-size="14" fill="#e9eef7">k + oo → koo</text>
+  <text class="mono ng-merge" x="78" y="366" font-size="14" fill="#ffffff">koo + k → kook</text>
+  <path class="flow" d="M185 384V416" fill="none" stroke="#2455d6" stroke-width="2" marker-end="url(#ng-arrow)" />
+
+  <text class="mono" x="60" y="414" font-size="10" fill="#596575">TOKENS</text>
+  {
+    tokens.map((t, i) => (
+      <g>
+        <rect
+          class="ng-token"
+          x={t.x}
+          y="422"
+          width={t.w}
+          height="30"
+          rx="4"
+          fill="#dce8ff"
+          stroke="#b9cdfb"
+          style={`animation-delay:${i * 0.22}s`}
+        />
+        <text class="mono" x={t.x + 8} y="442" font-size="13" fill="#173666">
+          {t.text}
+        </text>
+      </g>
+    ))
+  }
+
+  <path
+    d={`M${tokensEnd + 4} 437H392Q404 437 404 425V380Q404 368 416 368H930`}
+    fill="none"
+    stroke="#b9cdfb"
+    stroke-width="2"
+  />
+  <path
+    class="flow"
+    d={`M${tokensEnd + 4} 437H392Q404 437 404 425V380Q404 368 416 368H930`}
+    fill="none"
+    stroke="#2455d6"
+    stroke-width="2"
+  />
+
+  <text class="mono" x="690" y="174" font-size="11" fill="#4e5b6d" text-anchor="middle">
+    MATCHED HYPERPARAMETERS
+  </text>
+  <path d="M470 194V184H910V194" fill="none" stroke="#9fb1c9" />
+  {
+    towers.map((tower) => (
+      <g>
+        {knobs.map((k, row) => (
+          <g>
+            <path
+              d={`M${tower.cx - 40} ${214 + row * 14}H${tower.cx + 40}`}
+              stroke="#c3cfdf"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <circle cx={tower.cx - 40 + 80 * k} cy={214 + row * 14} r="5" fill="#ffffff" stroke="#2455d6" stroke-width="2" />
+          </g>
+        ))}
+        <IsoBox faces={tower.base} top="#4b5a70" left="#2b3444" right="#202632" />
+        {tower.slabs.map((slab, i) => (
+          <g>
+            <IsoBox faces={slab} top="#eef3fb" left="#b9c9e4" right="#94abd0" stroke="#7f97bd" />
+            <path
+              class="ng-layer"
+              d={slab.left + slab.right}
+              fill="#2455d6"
+              style={`animation-delay:${i * 0.18}s`}
+            />
+          </g>
+        ))}
+        <text class="mono" x={tower.cx} y="494" font-size="11" fill="#596575" text-anchor="middle">
+          {tower.run}
+        </text>
+        <text x={tower.cx} y="520" font-size="22" font-weight="500" fill="#202632" text-anchor="middle">
+          29.9M
+        </text>
+        <path d={`M${tower.cx} 530V554`} stroke="#9fb1c9" stroke-dasharray="3 3" />
+      </g>
+    ))
+  }
+
+  <text class="mono" x="60" y="572" font-size="11" fill="#4e5b6d">TOKEN-WEIGHTED PERPLEXITY</text>
+  <text class="mono" x="60" y="592" font-size="10" fill="#596575">EVERY TOKEN COUNTS ONCE</text>
+  {
+    cells.map((x, i) => (
+      <rect
+        class="ng-cell"
+        x={x}
+        y="560"
+        width="10"
+        height="16"
+        rx="2"
+        fill="#8baff7"
+        style={`animation-delay:${i * 0.05}s`}
+      />
+    ))
+  }
+</svg>

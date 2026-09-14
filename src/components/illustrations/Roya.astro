@@ -1,0 +1,291 @@
+---
+import IsoBox from "./IsoBox.astro";
+import IsoTree from "./IsoTree.astro";
+import {
+  iso,
+  poly,
+  line,
+  box,
+  onLeft,
+  onRight,
+  leftText,
+  bounds,
+  brackets,
+  chipWidth,
+} from "./iso";
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+const p = iso([300, 195], 30);
+
+// A 10 x 10 city tile: two roads, an office tower, a mid-rise, a cafe, a house.
+const ground = poly([p(0, 0), p(10, 0), p(10, 10), p(0, 10)]);
+const groundLeft = poly([p(0, 10), p(10, 10), p(10, 10, -0.45), p(0, 10, -0.45)]);
+const groundRight = poly([p(10, 0), p(10, 10), p(10, 10, -0.45), p(10, 0, -0.45)]);
+const grid = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  .map((i) => line(p(i, 0), p(i, 10)) + line(p(0, i), p(10, i)))
+  .join("");
+const roads =
+  poly([p(0, 5.6), p(10, 5.6), p(10, 7), p(0, 7)]) +
+  poly([p(4.6, 0), p(6, 0), p(6, 10), p(4.6, 10)]);
+const kerbs =
+  line(p(0, 5.6), p(4.6, 5.6)) + line(p(6, 5.6), p(10, 5.6)) +
+  line(p(0, 7), p(4.6, 7)) + line(p(6, 7), p(10, 7)) +
+  line(p(4.6, 0), p(4.6, 5.6)) + line(p(6, 0), p(6, 5.6)) +
+  line(p(4.6, 7), p(4.6, 10)) + line(p(6, 7), p(6, 10));
+const lanes =
+  line(p(0, 6.3), p(4.6, 6.3)) + line(p(6, 6.3), p(10, 6.3)) +
+  line(p(5.3, 0), p(5.3, 5.6)) + line(p(5.3, 7), p(5.3, 10));
+const crossings = [0, 1, 2, 3, 4]
+  .map((k) => {
+    const a = 4.7 + k * 0.26;
+    const b = 5.7 + k * 0.26;
+    return (
+      poly([p(a, 5), p(a + 0.14, 5), p(a + 0.14, 5.45), p(a, 5.45)]) +
+      poly([p(6.15, b), p(6.6, b), p(6.6, b + 0.14), p(6.15, b + 0.14)])
+    );
+  })
+  .join("");
+
+const tower = box(p, 1, 1, 2.8, 3.2, 3.6);
+const towerRoof = box(p, 1.4, 1.4, 0.9, 0.7, 0.35, 3.6);
+const lit = ["L1-3", "L0-0", "R2-0", "R4-2"];
+const flicker = ["L2-1", "R3-4"];
+const windows = [0, 1, 2, 3, 4].flatMap((j) => {
+  const z0 = 0.45 + j * 0.62;
+  return [
+    ...[0, 1, 2, 3].map((i) => ({
+      id: `L${i}-${j}`,
+      d: onLeft(p, 4.2, 1.3 + i * 0.62, 1.66 + i * 0.62, z0, z0 + 0.36),
+    })),
+    ...[0, 1, 2, 3, 4].map((i) => ({
+      id: `R${i}-${j}`,
+      d: onRight(p, 3.8, 1.28 + i * 0.6, 1.62 + i * 0.6, z0, z0 + 0.36),
+    })),
+  ];
+});
+const darkWindows = windows
+  .filter((w) => !lit.includes(w.id) && !flicker.includes(w.id))
+  .map((w) => w.d)
+  .join("");
+const litWindows = windows.filter((w) => lit.includes(w.id)).map((w) => w.d).join("");
+const flickerWindows = windows.filter((w) => flicker.includes(w.id));
+
+const midrise = box(p, 6.8, 1.2, 2.4, 2.4, 2.4);
+const midriseRoof = box(p, 7.3, 1.6, 0.6, 0.6, 0.3, 2.4);
+const midriseBands = [0, 1, 2]
+  .map((j) => {
+    const z0 = 0.45 + j * 0.7;
+    return onLeft(p, 3.6, 6.95, 9.05, z0, z0 + 0.3) + onRight(p, 9.2, 1.35, 3.45, z0, z0 + 0.3);
+  })
+  .join("");
+
+const cafe = box(p, 1.4, 7.7, 2.6, 1.7, 1.3);
+const awning = onLeft(p, 9.4, 1.4, 4, 1.06, 1.3);
+const cafeWindows = onRight(p, 4, 7.95, 9.15, 0.3, 0.85);
+const signPts = [p(1.75, 9.4, 0.5), p(3.65, 9.4, 0.5), p(3.65, 9.4, 0.98), p(1.75, 9.4, 0.98)];
+const sign = poly(signPts);
+const signText = leftText(p(2.12, 9.4, 0.59));
+
+const house = box(p, 7.4, 8, 1.6, 1.2, 0.8);
+const houseDetails = onLeft(p, 9.2, 7.7, 8, 0, 0.45) + onLeft(p, 9.2, 8.35, 8.75, 0.3, 0.55);
+
+const car = box(p, 5.4, 8.8, 0.46, 0.95, 0.4);
+const carGlass = poly([p(5.45, 9.3, 0.4), p(5.81, 9.3, 0.4), p(5.81, 9.55, 0.4), p(5.45, 9.55, 0.4)]);
+const van = box(p, 0.3, 5.75, 0.95, 0.45, 0.38);
+
+const tree = (x: number, y: number) => ({ base: p(x, y), crown: p(x, y, 1) });
+const treesBack = [tree(0.6, 4.9)];
+const treesRight = [tree(6.6, 4.8), tree(7.9, 4.9), tree(9.2, 5)];
+const treesFront = [tree(8.2, 7.3), tree(9.6, 7.3)];
+
+// Detection overlays, timed to appear as the scan line passes each one.
+const detections = [
+  { region: bounds(signPts, 6), label: "TEXT: CAFE", below: true, delay: 0.5 },
+  { region: bounds(car.corners, 7), label: "VEHICLE", below: false, delay: 1.6 },
+  { region: bounds(tower.corners, 6), label: "STRUCTURE", below: false, delay: 2.4 },
+].map((d) => ({
+  ...d,
+  chipW: chipWidth(d.label, 11),
+  // Tags under a region hang from its right edge so they clear the car's bracket.
+  chipX: d.below ? d.region.x1 - chipWidth(d.label, 11) : d.region.x0,
+  chipY: d.below ? d.region.y1 + 6 : d.region.y0 - 24,
+}));
+const towerRegion = detections[2].region;
+
+const [px, py] = p(5.3, 6.3).map(Math.round);
+const hy = py - 30;
+const pin = `M${px} ${py}C${px - 3} ${hy + 16} ${px - 11} ${hy + 9} ${px - 11} ${hy}A11 11 0 1 1 ${px + 11} ${hy}C${px + 11} ${hy + 9} ${px + 3} ${hy + 16} ${px} ${py}Z`;
+const typed = [
+  { w: 290, o: 0.85 },
+  { w: 252, o: 0.6 },
+  { w: 274, o: 0.6 },
+  { w: 150, o: 0.6 },
+];
+---
+
+<svg
+  class="illustration"
+  viewBox="0 0 1000 620"
+  width="1000"
+  height="620"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <linearGradient id="roya-scan-fill" x1="0" x2="1">
+      <stop offset="0" stop-color="#2455d6" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="#2455d6" stop-opacity="0.18"></stop>
+    </linearGradient>
+    <clipPath id="roya-scene">
+      <rect x="20" y="70" width="560" height="470"></rect>
+    </clipPath>
+  </defs>
+  <text class="mono" x="40" y="50" font-size="12" fill="#4e5b6d">
+    FIG. 01 / SIGNALS INTO CONTEXT
+  </text>
+
+  <path d={groundLeft} fill="#c4d0df" />
+  <path d={groundRight} fill="#a7b7cc" />
+  <path d={ground} fill="#e4ebf4" stroke="#a1b2c9" />
+  <path d={grid} fill="none" stroke="#d3ddea" />
+  <path d={roads} fill="#ced9e7" />
+  <path d={kerbs} fill="none" stroke="#a6b8cf" />
+  <path d={lanes} fill="none" stroke="#6b83a3" stroke-dasharray="5 5" />
+  <path d={crossings} fill="#f7f9fc" />
+
+  <IsoBox faces={tower} top="#8aa3c6" left="#3a5a86" right="#2c4770" stroke="#9fbbe3" />
+  <path d={darkWindows} fill="#233c61" />
+  <path d={litWindows} fill="#b9d0f5" />
+  {
+    flickerWindows.map((w, i) => (
+      <path
+        class="roya-flicker"
+        d={w.d}
+        fill="#b9d0f5"
+        style={`animation-delay:${i * -2.3}s`}
+      />
+    ))
+  }
+  <IsoBox faces={towerRoof} top="#c3d3ea" left="#7592b9" right="#5f7ea8" />
+  {treesBack.map((t) => <IsoTree {...t} />)}
+  <IsoBox faces={van} top="#4b5a70" left="#2b3444" right="#202632" />
+
+  <IsoBox faces={midrise} top="#a4b8d6" left="#56739c" right="#44628d" stroke="#bcd0ee" />
+  <path d={midriseBands} fill="#b9d0f5" opacity="0.75" />
+  <IsoBox faces={midriseRoof} top="#dbe5f3" left="#8aa3c6" right="#7592b9" />
+  {treesRight.map((t) => <IsoTree {...t} />)}
+
+  <IsoBox faces={cafe} top="#eef2f8" left="#c9d6e8" right="#b1c2da" stroke="#a6b8cf" />
+  <path d={cafeWindows} fill="#8fb0e0" />
+  <path d={awning} fill="#2455d6" />
+  <path d={sign} fill="#ffffff" stroke="#2455d6" stroke-width="0.8" />
+  <text class="mono" transform={signText} font-size="12" fill="#202632">CAFE</text>
+
+  {treesFront.map((t) => <IsoTree {...t} />)}
+  <IsoBox faces={house} top="#dfe7f2" left="#bccbe0" right="#a5b8d2" stroke="#a6b8cf" />
+  <path d={houseDetails} fill="#8fa6c6" />
+  <IsoBox faces={car} top="#2455d6" left="#1d47b3" right="#173a92" stroke="#8baff7" />
+  <path d={carGlass} fill="#abc7ff" />
+
+  <g clip-path="url(#roya-scene)">
+    <g class="roya-scan">
+      <rect x="20" y="70" width="64" height="470" fill="url(#roya-scan-fill)"></rect>
+      <path d="M84 70V540" stroke="#2455d6" stroke-width="1.5"></path>
+    </g>
+  </g>
+
+  {
+    detections.map((d) => (
+      <g class="pop" style={`animation-delay:${d.delay}s`}>
+        <rect
+          x={d.region.x0}
+          y={d.region.y0}
+          width={d.region.x1 - d.region.x0}
+          height={d.region.y1 - d.region.y0}
+          fill="#2455d6"
+          fill-opacity="0.07"
+        />
+        <path d={brackets(d.region)} fill="none" stroke="#2455d6" stroke-width="2.2" />
+        <rect x={d.chipX} y={d.chipY} width={d.chipW} height="18" rx="2" fill="#2455d6" />
+        <text class="mono" x={d.chipX + 8} y={d.chipY + 13} font-size="11" fill="#ffffff">
+          {d.label}
+        </text>
+      </g>
+    ))
+  }
+
+  <ellipse class="pulse" cx={px} cy={py} rx="24" ry="12" fill="none" stroke="#2455d6" stroke-width="1.5" />
+  <ellipse
+    class="pulse"
+    cx={px}
+    cy={py}
+    rx="24"
+    ry="12"
+    fill="none"
+    stroke="#2455d6"
+    stroke-width="1.5"
+    style="animation-delay:-1.4s"
+  />
+  <path d={pin} fill="#2455d6" stroke="#ffffff" stroke-width="1.5" />
+  <circle cx={px} cy={hy} r="4" fill="#ffffff" />
+
+  <path
+    class="flow"
+    d={`M${towerRegion.x1} ${towerRegion.y0 + 26}C500 ${towerRegion.y0 + 26} 520 179 620 179`}
+    fill="none"
+    stroke="#2455d6"
+    stroke-width="1.6"
+  />
+  <path
+    class="flow"
+    d={`M${px + 12} ${hy}C450 ${hy} 520 283 620 283`}
+    fill="none"
+    stroke="#2455d6"
+    stroke-width="1.6"
+  />
+
+  <text class="mono" x="620" y="124" font-size="11" fill="#596575">OBSERVED</text>
+  <path d="M694 120H960" stroke="#d5dce5" />
+  <rect x="626" y="142" width="340" height="86" rx="6" fill="#e3e9f2" />
+  <rect x="620" y="136" width="340" height="86" rx="6" fill="#ffffff" stroke="#d5dce5" />
+  <rect x="640" y="157" width="44" height="44" rx="6" fill="#dce8ff" />
+  <path d={brackets({ x0: 650, y0: 167, x1: 674, y1: 191 }, 7)} fill="none" stroke="#2455d6" stroke-width="2" />
+  <circle cx="662" cy="179" r="3" fill="#2455d6" />
+  <text class="mono" x="700" y="174" font-size="11" fill="#596575">01 / DETECTION + OCR</text>
+  <text x="700" y="203" font-size="24" font-weight="500" fill="#202632">Objects &amp; text</text>
+
+  <rect x="626" y="246" width="340" height="86" rx="6" fill="#e3e9f2" />
+  <rect x="620" y="240" width="340" height="86" rx="6" fill="#ffffff" stroke="#d5dce5" />
+  <rect x="640" y="261" width="44" height="44" rx="6" fill="#dce8ff" />
+  <path d="M651 261V305M662 261V305M673 261V305M640 272H684M640 283H684M640 294H684" stroke="#b9cdfb" />
+  <path d="M662 290c-2-4-6-6-6-10a6 6 0 0 1 12 0c0 4-4 6-6 10z" fill="#2455d6" />
+  <text class="mono" x="700" y="278" font-size="11" fill="#596575">02 / GEOSPATIAL</text>
+  <text x="700" y="307" font-size="24" font-weight="500" fill="#202632">Where it is</text>
+
+  <text class="mono" x="620" y="364" font-size="11" fill="#596575">GENERATED</text>
+  <path d="M700 360H960" stroke="#9fb1c9" stroke-dasharray="4 4" />
+  <rect x="620" y="378" width="340" height="182" rx="6" fill="#202632" stroke="#5b82e6" stroke-width="1.5" stroke-dasharray="6 5" />
+  <text class="mono" x="642" y="406" font-size="11" fill="#8baff7">03 / LLM INTERPRETATION</text>
+  {
+    typed.map((t, i) => (
+      <rect
+        class="type"
+        x="642"
+        y={424 + i * 22}
+        width={t.w}
+        height="9"
+        rx="4.5"
+        fill="#ffffff"
+        fill-opacity={t.o}
+        style={`animation-delay:${3.2 + i * 0.4}s`}
+      />
+    ))
+  }
+  <rect class="blink" x="800" y="488" width="8" height="15" fill="#5b82e6" />
+  <text class="mono" x="642" y="540" font-size="11" fill="#8b97a8">
+    AN INTERPRETATION, NOT EVIDENCE
+  </text>
+  <path class="flow" d="M960 179H978V470H960M960 283H978" fill="none" stroke="#2455d6" stroke-width="1.6" />
+</svg>

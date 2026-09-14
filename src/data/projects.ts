@@ -125,9 +125,7 @@ export const projects = [
     evidence:
       "What exists: three trained models and the pipeline that prepares their data and scores them. I’m not publishing perplexity figures or a ranking on this page.",
     limitations:
-      "Model size and run count describe the setup, not the quality. There’s no public repository, dataset or set of training curves for this one, so my CV is the record. The lesson that stuck: make the comparison trustworthy first, then look at the score.",
-    source: "/Ibrahim-Alharthi-CV.pdf",
-    sourceLabel: "Read about it in my CV",
+      "Model size and run count describe the setup, not the quality, and the code, data and training curves for this one aren’t public. The lesson that stuck: make the comparison trustworthy first, then look at the score.",
     caption: "Experiment setup · illustration, not a training curve",
   },
 ];

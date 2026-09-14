@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import ProjectVisual from "../../components/ProjectVisual.astro";
+import Icon from "../../components/Icon.astro";
 import { projects } from "../../data/projects";
 export function getStaticPaths() {
   return projects.map((project, index) => ({
@@ -9,7 +10,6 @@ export function getStaticPaths() {
   }));
 }
 const { project, next } = Astro.props;
-const cv = "/Ibrahim-Alharthi-CV.pdf";
 ---
 
 <Layout
@@ -18,7 +18,7 @@ const cv = "/Ibrahim-Alharthi-CV.pdf";
 >
   <article class="case-study wrap">
     <a class="text-link back-link" href="/#work">
-      <span aria-hidden="true">←</span> All work
+      <Icon name="arrow-left" /> All work
     </a>
     <header class="case-header">
       <p class="eyebrow">
@@ -46,14 +46,13 @@ const cv = "/Ibrahim-Alharthi-CV.pdf";
         <p class="eyebrow">At a glance</p>
         <p class="case-fact">{project.fact}</p>
         <p>{project.factLabel}</p>
-        <a class="text-link" href={project.source}>
-          {project.sourceLabel} <span aria-hidden="true">↗</span>
-        </a>
-        {project.source !== cv && (
-          <a class="text-link" href={cv}>
-            Full CV (PDF) <span aria-hidden="true">↗</span>
-          </a>
-        )}
+        {
+          project.source && (
+            <a class="text-link" href={project.source}>
+              {project.sourceLabel} <Icon name="arrow-up-right" />
+            </a>
+          )
+        }
       </aside>
       <div class="case-narrative">
         <section>
@@ -92,7 +91,7 @@ const cv = "/Ibrahim-Alharthi-CV.pdf";
     <a class="next-project" href={`/work/${next.slug}/`}>
       <span class="eyebrow">Next case study</span>
       <span>
-        {next.title} <span aria-hidden="true">↗</span>
+        {next.title} <Icon name="arrow-up-right" />
       </span>
     </a>
   </article>

@@ -1,0 +1,38 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  caption: string;
+  design: string[];
+  href?: string;
+}
+const { slug, title, caption, design, href } = Astro.props;
+const Media = href ? "a" : "div";
+---
+
+<figure
+  class:list={["project-visual", "visual-" + slug]}
+  style={`view-transition-name: visual-${slug}`}
+>
+  <Media href={href} class="project-media">
+    <img
+      src={`/illustrations/${slug}.svg`}
+      width="1000"
+      height="620"
+      loading="lazy"
+      decoding="async"
+      alt={`${title}: ${caption}`}
+    />
+  </Media>
+  <figcaption>{caption}</figcaption>
+  <details class="visual-notes">
+    <summary>
+      Read the diagram <span aria-hidden="true">+</span>
+    </summary>
+    <ol>
+      {design.map((step) => (
+        <li>{step}</li>
+      ))}
+    </ol>
+  </details>
+</figure>

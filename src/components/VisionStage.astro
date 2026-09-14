@@ -1,0 +1,170 @@
+<figure class="vision-stage">
+  <div class="stage-heading">
+    <span class="eyebrow">Fig. 01 / A way of seeing</span>
+    <label class="depth-control">
+      <input id="depth" type="checkbox" checked /> 3D view
+    </label>
+  </div>
+  <fieldset class="vision-controls">
+    <legend class="sr-only">
+      Explore the illustrative computer vision stages
+    </legend>
+    <input type="radio" name="vision" id="pixels" value="pixels" checked />
+    <label for="pixels">
+      <span>01</span> Pixels
+    </label>
+    <input type="radio" name="vision" id="regions" value="regions" />
+    <label for="regions">
+      <span>02</span> Regions
+    </label>
+    <input type="radio" name="vision" id="meaning" value="meaning" />
+    <label for="meaning">
+      <span>03</span> Meaning
+    </label>
+  </fieldset>
+  <div class="vision-canvas">
+    <div
+      class="scene-rig"
+      role="img"
+      aria-label="Illustrated 3D street scene with two buildings and a vehicle."
+    >
+      <div class="scene-floor" aria-hidden="true">
+        <span class="road road-horizontal"></span>
+        <span class="road road-vertical"></span>
+        <span class="ground-label">INPUT / VISUAL FIELD</span>
+      </div>
+      <div class="city-block building-a" aria-hidden="true">
+        <span class="block-top">
+          <i>A</i>
+        </span>
+        <span class="block-front"></span>
+        <span class="block-side"></span>
+      </div>
+      <div class="city-block building-b" aria-hidden="true">
+        <span class="block-top">
+          <i>B</i>
+        </span>
+        <span class="block-front"></span>
+        <span class="block-side"></span>
+      </div>
+      <div class="city-block vehicle" aria-hidden="true">
+        <span class="block-top"></span>
+        <span class="block-front"></span>
+        <span class="block-side"></span>
+      </div>
+      <div class="scene-trees" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <svg class="region-layer" viewBox="0 0 640 480" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M63 84h189v152H63zM364 325h170v125H364zM294 357h52v88h-52z" />
+          <path d="M63 74v-12h12M240 62h12v12M364 315v-12h12M522 303h12v12" />
+        </g>
+        <g fill="currentColor" font-family="monospace" font-size="12">
+          <text x="72" y="81">
+            REGION A / STRUCTURE
+          </text>
+          <text x="371" y="298">
+            REGION B / STRUCTURE
+          </text>
+          <text x="356" y="433">
+            C / VEHICLE
+          </text>
+        </g>
+      </svg>
+    </div>
+    <div class="interpretation">
+      <span class="eyebrow">Illustrative interpretation</span>
+      <p>
+        A scene becomes
+        <br />
+        <strong>structured information.</strong>
+      </p>
+      <dl>
+        <div>
+          <dt>A / B</dt>
+          <dd>Building regions</dd>
+        </div>
+        <div>
+          <dt>C</dt>
+          <dd>Vehicle region</dd>
+        </div>
+        <div>
+          <dt>Source</dt>
+          <dd>Hand-drawn annotations</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="canvas-corner" aria-hidden="true">
+      INPUT → REGIONS → CONTEXT
+    </div>
+  </div>
+  <figcaption>
+    <strong>From pixels to understanding.</strong>
+    <span>Hand-built illustration · not model output</span>
+  </figcaption>
+  <p class="stage-description pixels-description">
+    A small scene in 3D. Move your pointer to tilt it, or flip to flat view.
+  </p>
+  <p class="stage-description regions-description">
+    Pick out what matters. The annotation layer floats up so you can see the
+    structure underneath.
+  </p>
+  <p class="stage-description meaning-description">
+    Regions become something you can reason about. The labels are placed by
+    hand here, not predicted.
+  </p>
+</figure>
+
+<script>
+  const stage = document.querySelector<HTMLElement>(".vision-stage");
+  const canvas = stage?.querySelector<HTMLElement>(".vision-canvas");
+  const depth = stage?.querySelector<HTMLInputElement>("#depth");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  if (stage && canvas && depth) {
+    let visible = true;
+    const reset = () => {
+      canvas.style.removeProperty("--pointer-x");
+      canvas.style.removeProperty("--pointer-y");
+    };
+    canvas.addEventListener(
+      "pointermove",
+      (event) => {
+        if (
+          !visible ||
+          document.hidden ||
+          reduced.matches ||
+          !finePointer.matches ||
+          !depth.checked ||
+          event.pointerType === "touch"
+        )
+          return;
+        const bounds = canvas.getBoundingClientRect();
+        canvas.style.setProperty(
+          "--pointer-x",
+          `${((event.clientX - bounds.left) / bounds.width - 0.5) * 10}deg`,
+        );
+        canvas.style.setProperty(
+          "--pointer-y",
+          `${((event.clientY - bounds.top) / bounds.height - 0.5) * -8}deg`,
+        );
+      },
+      { passive: true },
+    );
+    canvas.addEventListener("pointerleave", reset);
+    depth.addEventListener("change", reset);
+    reduced.addEventListener("change", reset);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) reset();
+    });
+    if ("IntersectionObserver" in window)
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (!visible) reset();
+      }).observe(canvas);
+  }
+</script>

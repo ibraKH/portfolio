@@ -78,6 +78,15 @@ for (const route of routes) {
       imgs.forEach((img) => (img.loading = "eager"));
       await Promise.all(imgs.map((img) => img.decode()));
     });
+    // Let section entrances finish; mid-fade text would be measured at partial opacity.
+    await page.evaluate(() =>
+      Promise.all(
+        document
+          .getAnimations()
+          .filter((a) => a.animationName === "entrance")
+          .map((a) => a.finished),
+      ),
+    );
     const result = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();

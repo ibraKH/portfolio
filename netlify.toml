@@ -1,0 +1,19 @@
+# Netlify builds and deploys this site from the repo root on every push to main.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Astro 7 needs Node 22.12+. 26 matches the version the build was verified on.
+  NODE_VERSION = "26"
+
+# Older URLs that may still be linked or indexed somewhere.
+[[redirects]]
+  from = "/Map"
+  to = "/map/"
+  status = 301
+
+[[redirects]]
+  from = "/sitemap.txt"
+  to = "/sitemap.xml"
+  status = 301

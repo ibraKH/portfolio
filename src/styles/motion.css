@@ -8,8 +8,8 @@
   animation-duration: 420ms;
   animation-timing-function: var(--ease-spatial);
 }
-/* Other diagrams settle once; Roya retains its original, pausable sequence. */
-.project-visual:not(.visual-roya) .illustration * {
+/* Most diagrams settle once; the live-feed ones keep looping and can be paused. */
+.project-visual:not(.visual-loops) .illustration * {
   animation-iteration-count: 1 !important;
 }
 .project.revealed {

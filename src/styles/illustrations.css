@@ -310,6 +310,6 @@
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
-.visual-roya:has(.roya-pause:checked) .illustration * {
+.visual-loops:has(.illustration-pause:checked) .illustration * {
   animation-play-state: paused;
 }

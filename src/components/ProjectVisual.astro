@@ -12,9 +12,10 @@ interface Props {
   title: string;
   caption: string;
   design: string[];
+  stats?: { value: number; label: string }[];
   href?: string;
 }
-const { slug, title, caption, design, href } = Astro.props;
+const { slug, title, caption, design, stats, href } = Astro.props;
 const Media = href ? "a" : "div";
 const illustrations = {
   roya: Roya,
@@ -23,10 +24,12 @@ const illustrations = {
   nanogpt: Nanogpt,
 };
 const Illustration = illustrations[slug as keyof typeof illustrations];
+// These figures run like a live feed, so they loop and offer a pause.
+const loops = ["roya"].includes(slug);
 ---
 
 <figure
-  class:list={["project-visual", "visual-" + slug]}
+  class:list={["project-visual", "visual-" + slug, { "visual-loops": loops }]}
   style={`view-transition-name: visual-${slug}`}
 >
   {slug === "clip" ? (
@@ -36,9 +39,9 @@ const Illustration = illustrations[slug as keyof typeof illustrations];
       <Illustration label={`${title}: ${caption}`} />
     </Media>
   )}
-  {slug === "roya" && (
+  {loops && (
     <label class="illustration-motion-control">
-      <input type="checkbox" class="roya-pause" />
+      <input type="checkbox" class="illustration-pause" />
       <span class="sr-only">Pause animation</span>
       <span class="motion-state" aria-hidden="true">
         <i></i>
@@ -47,16 +50,12 @@ const Illustration = illustrations[slug as keyof typeof illustrations];
       </span>
     </label>
   )}
-  {slug === "techlauncher" && (
+  {stats && (
     <div
       class="evidence-strip"
       aria-label="Project scope, as documented in the case study"
     >
-      {[
-        { value: 23, label: "Database tables" },
-        { value: 14, label: "Migrations" },
-        { value: 32, label: "Jest test files" },
-      ].map((stat) => (
+      {stats.map((stat) => (
         <div>
           <strong>
             <span class="sr-only">{stat.value}</span>
@@ -90,7 +89,7 @@ const Illustration = illustrations[slug as keyof typeof illustrations];
   initProjectDepth();
   import { initCardLight } from "../lib/animation/card-light";
   initCardLight();
-  // Restore Roya's loop only while visible; never animate a hidden tab.
+  // Animate illustrations only while visible; never animate a hidden tab.
   if ("IntersectionObserver" in window) {
     const visible = new Map<Element, boolean>();
     const sync = () =>

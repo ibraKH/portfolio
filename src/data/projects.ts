@@ -90,6 +90,11 @@ export const projects = [
       "PostgreSQL / PostGIS",
       "CI + tests + Docker",
     ],
+    stats: [
+      { value: 23, label: "Database tables" },
+      { value: 14, label: "Migrations" },
+      { value: 32, label: "Jest test files" },
+    ],
     evidence:
       "By the numbers: 23 database tables, 14 migrations and a Jest suite of 32 test files. I reviewed and merged 26 of the 31 production pull requests, and a contribution audit credits me as primary author of 12 of the 14 functional areas. Those figures describe scope and ownership, not how many people use it.",
     limitations:

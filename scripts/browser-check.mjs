@@ -106,7 +106,7 @@ for (const route of routes) {
   }
 }
 await page.goto(report.environment.base);
-for (const slug of ["sceneai", "roya", "clip", "techlauncher", "nanogpt"]) {
+for (const slug of ["roya", "sceneai", "clip", "techlauncher", "nanogpt"]) {
   await page.locator(`.project-link[href="/work/${slug}/"]`).click();
   await page.waitForURL(`**/work/${slug}/`);
   await page.getByRole("link", { name: "All work", exact: true }).click();

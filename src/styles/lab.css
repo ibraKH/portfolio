@@ -47,7 +47,7 @@
 .project {
   margin-bottom: 80px;
 }
-.project-sceneai {
+.project-roya {
   grid-template-columns: 0.8fr 1.5fr;
 }
 .project-info h3 {
@@ -79,7 +79,7 @@
   .hero-intro {
     max-width: none;
   }
-  .project-sceneai {
+  .project-roya {
     grid-template-columns: 1fr 1.2fr;
   }
   .project-info h3 {
@@ -114,7 +114,7 @@
   .work .section-heading {
     margin-bottom: 36px;
   }
-  .project-sceneai {
+  .project-roya {
     grid-template-columns: 1fr;
   }
   .project {

@@ -1,7 +1,40 @@
 export const projects = [
   {
-    slug: "sceneai",
+    slug: "roya",
     number: "01",
+    title: "Roya",
+    category: "Multimodal AI · Computer vision",
+    tagline: "Detection, OCR, maps and a language model, wired into one app.",
+    summary:
+      "A platform that runs object detection, text recognition, geospatial analysis and a language model over the same images, end to end.",
+    role: "End-to-end platform engineering",
+    stack: "Python / FastAPI / YOLO / OpenCV / React",
+    fact: "~1,000 images",
+    factLabel: "Run through the pipeline. A measure of scale, not accuracy.",
+    problem:
+      "One photo holds several kinds of information at once: the objects in it, any text in the scene, and the place it sits in the world. Most tools only read one of those. Roya was my attempt to read them together, inside a single piece of software.",
+    ownership:
+      "I built the platform on both sides: the Python inference backend and the React interface. Most of that work was wiring YOLO, OCR, geospatial analysis and an LLM into one flow that a person could actually use.",
+    approach:
+      "No single model was the hard part. The hard part was getting them to behave like one application instead of a pile of separate experiments. FastAPI sits in front as the service layer, and OpenCV and PyTorch do the visual processing underneath.",
+    design: [
+      "Visual input",
+      "Detection + OCR",
+      "Geospatial context",
+      "LLM interpretation",
+      "React application",
+    ],
+    evidence:
+      "The pipeline has handled roughly 1,000 images, and the frontend and backend code are both public. Treat that number as a sense of scale. It says how much the workflow processed, not how accurate or fast it was.",
+    limitations:
+      "It’s a prototype. The camera feeds are simulated and the profiling data is mock, so this isn’t a system running in the field. The lesson I kept from it: hold what the camera actually saw apart from what the language model says about it. An LLM’s summary is an interpretation, and it shouldn’t be dressed up as evidence.",
+    source: "https://github.com/ibraKH/neural-vision-LLM-threat-Intelligence",
+    sourceLabel: "Explore the repository",
+    caption: "How the pieces connect · illustration, not model output",
+  },
+  {
+    slug: "sceneai",
+    number: "02",
     title: "SceneAI",
     category: "Real-time multimodal AI · Computer vision",
     tagline:
@@ -38,39 +71,6 @@ export const projects = [
     sourceLabel: "Explore the repository",
     caption:
       "How fresh frames become scene memory and Arabic descriptions · illustration, not live output",
-  },
-  {
-    slug: "roya",
-    number: "02",
-    title: "Roya",
-    category: "Multimodal AI · Computer vision",
-    tagline: "Detection, OCR, maps and a language model, wired into one app.",
-    summary:
-      "A platform that runs object detection, text recognition, geospatial analysis and a language model over the same images, end to end.",
-    role: "End-to-end platform engineering",
-    stack: "Python / FastAPI / YOLO / OpenCV / React",
-    fact: "~1,000 images",
-    factLabel: "Run through the pipeline. A measure of scale, not accuracy.",
-    problem:
-      "One photo holds several kinds of information at once: the objects in it, any text in the scene, and the place it sits in the world. Most tools only read one of those. Roya was my attempt to read them together, inside a single piece of software.",
-    ownership:
-      "I built the platform on both sides: the Python inference backend and the React interface. Most of that work was wiring YOLO, OCR, geospatial analysis and an LLM into one flow that a person could actually use.",
-    approach:
-      "No single model was the hard part. The hard part was getting them to behave like one application instead of a pile of separate experiments. FastAPI sits in front as the service layer, and OpenCV and PyTorch do the visual processing underneath.",
-    design: [
-      "Visual input",
-      "Detection + OCR",
-      "Geospatial context",
-      "LLM interpretation",
-      "React application",
-    ],
-    evidence:
-      "The pipeline has handled roughly 1,000 images, and the frontend and backend code are both public. Treat that number as a sense of scale. It says how much the workflow processed, not how accurate or fast it was.",
-    limitations:
-      "It’s a prototype. The camera feeds are simulated and the profiling data is mock, so this isn’t a system running in the field. The lesson I kept from it: hold what the camera actually saw apart from what the language model says about it. An LLM’s summary is an interpretation, and it shouldn’t be dressed up as evidence.",
-    source: "https://github.com/ibraKH/neural-vision-LLM-threat-Intelligence",
-    sourceLabel: "Explore the repository",
-    caption: "How the pieces connect · illustration, not model output",
   },
   {
     slug: "clip",

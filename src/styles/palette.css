@@ -1,0 +1,26 @@
+/* White / Blue. Shared tokens keep scene and interface colors consistent. */
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --ink: #202632;
+  --muted: #596575;
+  --ink-soft: #4e5b6d;
+  --accent: #2455d6;
+  --accent-dim: #dce8ff;
+  --signal: #2455d6;
+  --line: #d5dce5;
+  --surface: #f3f6fa;
+  --surface-raised: #e4ebf4;
+  --night: #101a2a;
+  --grid: #2455d610;
+  --geometry-light: #b9c9e4;
+  --geometry-mid: #8aa3c6;
+  --geometry-shade: #5d7aa3;
+  --geometry-deep: #2c4770;
+}
+/* Quiet page grid; stronger spatial grids live within the interactive scenes. */
+body {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+::selection { background: var(--signal); color: var(--paper); }

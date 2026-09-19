@@ -1,0 +1,90 @@
+:root {
+  --motion-micro: 180ms;
+  --motion-reveal: 420ms;
+  --motion-scene: 720ms;
+  --ease-spatial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-group(*) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-spatial);
+}
+/* Other diagrams settle once; Roya retains its original, pausable sequence. */
+.project-visual:not(.visual-roya) .illustration * {
+  animation-iteration-count: 1 !important;
+}
+.project.revealed {
+  animation: none;
+}
+.project.revealed .project-visual {
+  animation: plane-reveal var(--motion-scene) var(--ease-spatial) both;
+}
+.project-clip.revealed .project-visual {
+  animation-name: space-reveal;
+}
+.project-techlauncher.revealed .project-visual {
+  animation-name: system-reveal;
+}
+@keyframes plane-reveal {
+  from {
+    clip-path: inset(0 0 12% 0);
+    transform: translateY(18px);
+  }
+  to {
+    clip-path: inset(0);
+    transform: none;
+  }
+}
+@keyframes space-reveal {
+  from {
+    clip-path: inset(0 12% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes system-reveal {
+  from {
+    clip-path: inset(0 0 0 12%);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+.lab-controls {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lab-controls input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.lab-controls label {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  min-height: 48px;
+  padding: 8px 6px;
+  font: 10px var(--mono);
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  transition:
+    color var(--motion-micro),
+    background var(--motion-micro);
+}
+.lab-controls label span {
+  font-size: 9px;
+}

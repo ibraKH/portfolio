@@ -1,3 +1,4 @@
+@import "./palette.css";
 @font-face {
   font-family: Space;
   src: url("/fonts/space-grotesk-latin.ttf") format("truetype");
@@ -5,14 +6,6 @@
   font-display: swap;
 }
 :root {
-  color-scheme: light;
-  --paper: #ffffff;
-  --ink: #202632;
-  --muted: #596575;
-  --ink-soft: #4e5b6d;
-  --accent: #2455d6;
-  --line: #d5dce5;
-  --surface: #f3f6fa;
   --display: Space, Arial, sans-serif;
   --body: Arial, Helvetica, sans-serif;
   --mono: "SFMono-Regular", Consolas, monospace;
@@ -27,7 +20,7 @@ html {
 }
 body {
   margin: 0;
-  background: var(--paper);
+  background-color: var(--paper);
   color: var(--ink);
   font-family: var(--body);
   font-size: 16px;
@@ -35,7 +28,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 ::selection {
-  background: #dce8ff;
+  background: var(--accent-dim);
   color: var(--ink);
 }
 a {
@@ -699,10 +692,10 @@ label {
 }
 .experience .text-link {
   margin-top: 14px;
-  border-color: #bbc7d6;
+  border-color: var(--line);
 }
 .experience .text-link:hover {
-  color: #1745b5;
+  color: var(--accent);
 }
 .capabilities {
   padding-block: 100px;
@@ -779,7 +772,7 @@ label {
   margin-top: 8px;
   gap: 14px;
   color: var(--accent);
-  border-color: #c9d8f7;
+  border-color: var(--line);
 }
 .qualification {
   font-size: 12px;

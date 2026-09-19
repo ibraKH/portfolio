@@ -1,17 +1,251 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
+const digits = ["4", "0", "4"];
 ---
 
 <Layout title="Page not found | Ibrahim Alharthi" noindex>
-  <div class="wrap archive-page">
-    <p class="eyebrow">404 / Page not found</p>
-    <h1>
-      This path ends here<span class="accent">.</span>
-    </h1>
-    <p>This page has moved or never existed. My work is on the homepage.</p>
-    <a class="button" href="/#work">
-      Explore work <Icon name="arrow-up-right" />
-    </a>
-  </div>
+  <section class="wrap lost" aria-labelledby="lost-title">
+    <div class="lost-copy">
+      <p class="eyebrow">404 / Page not found</p>
+      <h1 id="lost-title">
+        This path ends here<span class="accent">.</span>
+      </h1>
+      <p class="lost-lede">
+        This page has moved or never existed. My work is on the homepage.
+      </p>
+      <div class="lost-actions">
+        <a class="button" href="/#work">
+          Explore work <Icon name="arrow-up-right" />
+        </a>
+        <a class="lost-pill" href="/#contact">
+          Get in touch <Icon name="arrow-up-right" />
+        </a>
+      </div>
+    </div>
+
+    <!-- The detector looks at every tile and never finds the page. -->
+    <div class="lost-frame" aria-hidden="true">
+      <span class="lost-caption">Fig. 404 / Scanning</span>
+      <span class="lost-scan"></span>
+      {digits.map((digit, i) => (
+        <span class:list={["lost-tile", { "is-zero": digit === "0" }]} style={`--i:${i};`}>
+          <b>{digit}</b>
+        </span>
+      ))}
+      <span class="lost-box">
+        <span class="lost-chip">
+          <span class="chip-searching">Searching</span>
+          <span class="chip-none">No match / 0.00</span>
+        </span>
+      </span>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .lost {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    align-items: center;
+    gap: 6%;
+    min-height: calc(100svh - 220px);
+    padding-block: 56px 72px;
+  }
+  .lost h1 {
+    margin: 24px 0 22px;
+    font-size: clamp(48px, 6.2vw, 92px);
+    line-height: 0.95;
+    letter-spacing: -0.07em;
+  }
+  .lost-lede {
+    max-width: 380px;
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+  .lost-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 34px;
+  }
+  .lost-actions .button {
+    gap: 28px;
+  }
+  .lost-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+    padding: 0 20px 0 22px;
+    border-radius: 999px;
+    background: #ffffffb8;
+    box-shadow: 0 0 0 1px var(--hair), 0 8px 20px -14px #101a2a66;
+    font-size: 14px;
+    transition: background 250ms, color 250ms;
+  }
+  .lost-pill:hover {
+    background: var(--tile);
+    color: #fff;
+  }
+  .lost-pill .icon {
+    transition: transform 180ms var(--ease);
+  }
+  .lost-pill:hover .icon {
+    transform: translate(3px, -3px);
+  }
+
+  /* Glass viewfinder, same material as the project cards. */
+  .lost-frame {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    overflow: hidden;
+    border: 1px solid #ffffffd9;
+    border-radius: 28px;
+    background:
+      radial-gradient(var(--line) 0.8px, transparent 0.8px) 0 0 / 22px 22px,
+      var(--glass);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: var(--glass-shadow);
+    animation: frame-in 800ms var(--ease-spatial) both;
+  }
+  .lost-caption {
+    position: absolute;
+    top: 22px;
+    left: 26px;
+    font: 10px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .lost-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30%;
+    background: linear-gradient(#2455d600, #2455d612 85%, #2455d659 100%);
+    border-bottom: 1px solid #2455d666;
+    animation: scan 4s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+  }
+
+  /* The digits are dark tiles, like the icons floating in the hero. */
+  .lost-tile {
+    --tilt: calc((var(--i) - 1) * 5deg + 1deg);
+    position: absolute;
+    top: 38%;
+    left: calc(14% + var(--i) * 25%);
+    display: grid;
+    place-items: center;
+    width: 22%;
+    aspect-ratio: 1;
+    border-radius: 23%;
+    background: var(--tile);
+    box-shadow:
+      0 1px 0 #ffffff14 inset,
+      0 18px 30px -14px #101a2a80,
+      0 3px 8px -3px #101a2a40;
+    rotate: var(--tilt);
+    animation:
+      tile-drop 800ms var(--ease-spatial) calc(200ms + var(--i) * 90ms) backwards,
+      tile-bob 5s ease-in-out calc(var(--i) * -1.6s) infinite;
+    transition: scale 350ms var(--ease-spatial);
+  }
+  .lost-tile b {
+    font: 500 clamp(40px, 5.4vw, 76px) / 1 var(--display);
+    letter-spacing: -0.06em;
+    color: #fff;
+  }
+  .lost-tile.is-zero b {
+    color: #6f9bff;
+  }
+  .lost-frame:hover .lost-tile {
+    scale: 1.04;
+  }
+
+  /* Detection box: visits each tile, then widens to the whole row and reports nothing. */
+  .lost-box {
+    position: absolute;
+    left: 9%;
+    top: 31%;
+    width: 82%;
+    height: 43%;
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    background: #2455d60a;
+    animation: seek 9s var(--ease-spatial) 0.6s infinite backwards;
+  }
+  .lost-chip {
+    position: absolute;
+    left: -1.5px;
+    bottom: calc(100% + 6px);
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--accent);
+    font: 10px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+    display: grid;
+  }
+  .lost-chip > span {
+    grid-area: 1 / 1;
+  }
+  /* Resting state (and reduced motion) is the verdict; the loop plays the search first. */
+  .chip-searching {
+    opacity: 0;
+    animation: chip-searching 9s steps(1) 0.6s infinite backwards;
+  }
+  .chip-none {
+    animation: chip-none 9s steps(1) 0.6s infinite backwards;
+  }
+  @keyframes seek {
+    0%, 6% { left: 12%; top: 34%; width: 26%; height: 33%; }
+    20%, 26% { left: 37%; top: 34%; width: 26%; height: 33%; }
+    40%, 46% { left: 62%; top: 34%; width: 26%; height: 33%; }
+    60%, 100% { left: 9%; top: 31%; width: 82%; height: 43%; }
+  }
+  @keyframes chip-searching {
+    0% { opacity: 1; }
+    58% { opacity: 0; }
+  }
+  @keyframes chip-none {
+    0% { opacity: 0; }
+    58% { opacity: 1; }
+  }
+  @keyframes scan {
+    from { translate: 0 -100%; }
+    to { translate: 0 340%; }
+  }
+  @keyframes tile-bob {
+    50% { translate: 0 -6px; }
+  }
+  @keyframes tile-drop {
+    from { opacity: 0; transform: translateY(-40px) scale(0.85); }
+  }
+  @keyframes frame-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lost-scan {
+      display: none;
+    }
+  }
+  @media (max-width: 800px) {
+    .lost {
+      grid-template-columns: 1fr;
+      gap: 44px;
+      min-height: 0;
+      padding-block: 40px 56px;
+    }
+    .lost-frame {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 22px;
+    }
+  }
+</style>

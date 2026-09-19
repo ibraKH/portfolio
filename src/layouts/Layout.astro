@@ -1,6 +1,8 @@
 ---
 import "../styles/index.css";
-import "../styles/vision.css";
+import "../styles/motion.css";
+import "../styles/ux.css";
+import "../styles/polish.css";
 import Icon from "../components/Icon.astro";
 import type { IconName } from "../components/icons";
 interface Props {
@@ -15,11 +17,14 @@ const {
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const year = new Date().getFullYear();
-const links: { href: string; label: string; icon?: IconName; download?: boolean }[] = [
+const links: {
+  href: string;
+  label: string;
+  icon?: IconName;
+  download?: boolean;
+}[] = [
   { href: "/#work", label: "Work" },
-  { href: "/#experience", label: "Experience" },
   { href: "/#about", label: "About" },
-  { href: "/Ibrahim-Alharthi-CV.pdf", label: "CV", icon: "arrow-down", download: true },
   { href: "/#contact", label: "Contact", icon: "arrow-up-right" },
 ];
 ---
@@ -34,7 +39,9 @@ const links: { href: string; label: string; icon?: IconName; download?: boolean 
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
       href="/fonts/space-grotesk-latin.ttf"
@@ -68,7 +75,10 @@ const links: { href: string; label: string; icon?: IconName; download?: boolean 
       </a>
       <button class="menu-button" type="button" popovertarget="site-menu">
         Menu
-        <span class="menu-lines" aria-hidden="true"><i></i><i></i></span>
+        <span class="menu-lines" aria-hidden="true">
+          <i></i>
+          <i></i>
+        </span>
       </button>
       <nav id="site-menu" class="site-nav" popover aria-label="Main navigation">
         <div class="menu-head">
@@ -80,20 +90,21 @@ const links: { href: string; label: string; icon?: IconName; download?: boolean 
             popovertargetaction="hide"
           >
             Close
-            <span class="menu-lines is-close" aria-hidden="true"><i></i><i></i></span>
+            <span class="menu-lines is-close" aria-hidden="true">
+              <i></i>
+              <i></i>
+            </span>
           </button>
         </div>
-        {
-          links.map((link, i) => (
-            <a class="nav-link" href={link.href} download={link.download}>
-              <span class="nav-index" aria-hidden="true">
-                0{i + 1}
-              </span>
-              {link.label}
-              {link.icon && <Icon name={link.icon} />}
-            </a>
-          ))
-        }
+        {links.map((link, i) => (
+          <a class="nav-link" href={link.href} download={link.download}>
+            <span class="nav-index" aria-hidden="true">
+              0{i + 1}
+            </span>
+            {link.label}
+            {link.icon && <Icon name={link.icon} />}
+          </a>
+        ))}
         <div class="menu-foot">
           <a href="mailto:devibrakh@gmail.com">devibrakh@gmail.com</a>
           <div>
@@ -152,6 +163,12 @@ const links: { href: string; label: string; icon?: IconName; download?: boolean 
           .querySelectorAll("main section[id]")
           .forEach((el) => sections.observe(el));
       }
+      // Past the first few pixels the header tucks into a floating bar.
+      const header = document.querySelector(".header");
+      const float = () =>
+        header?.classList.toggle("is-floating", window.scrollY > 24);
+      window.addEventListener("scroll", float, { passive: true });
+      float();
       // The mobile menu is a native popover; close it once a link is chosen.
       const menu = document.getElementById("site-menu");
       if (menu && "hidePopover" in menu) {

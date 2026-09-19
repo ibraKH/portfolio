@@ -24,7 +24,7 @@ const { project, next } = Astro.props;
       <p class="eyebrow">
         {project.number} / {project.category}
       </p>
-      <h1>
+      <h1 style={`view-transition-name: title-${project.slug}`}>
         {project.title}
         <span class="accent">.</span>
       </h1>
@@ -40,22 +40,25 @@ const { project, next } = Astro.props;
         </div>
       </div>
     </header>
+    <nav class="case-sections" aria-label="Case study sections">
+      <a href={`/work/${project.slug}/#overview`}>Overview</a>
+      <a href={`/work/${project.slug}/#approach`}>Approach</a>
+      <a href={`/work/${project.slug}/#evidence`}>Evidence &amp; lessons</a>
+    </nav>
     <ProjectVisual {...project} />
     <div class="case-body">
       <aside>
         <p class="eyebrow">At a glance</p>
         <p class="case-fact">{project.fact}</p>
         <p>{project.factLabel}</p>
-        {
-          project.source && (
-            <a class="text-link" href={project.source}>
-              {project.sourceLabel} <Icon name="arrow-up-right" />
-            </a>
-          )
-        }
+        {project.source && (
+          <a class="text-link" href={project.source}>
+            {project.sourceLabel} <Icon name="arrow-up-right" />
+          </a>
+        )}
       </aside>
       <div class="case-narrative">
-        <section>
+        <section id="overview">
           <p class="eyebrow">01 / Context</p>
           <h2>The problem</h2>
           <p>{project.problem}</p>
@@ -65,7 +68,7 @@ const { project, next } = Astro.props;
           <h2>What I did</h2>
           <p>{project.ownership}</p>
         </section>
-        <section>
+        <section id="approach">
           <p class="eyebrow">03 / Decisions</p>
           <h2>The approach</h2>
           <p>{project.approach}</p>
@@ -76,7 +79,7 @@ const { project, next } = Astro.props;
           </ol>
           <p class="diagram-note">How the main pieces fit together.</p>
         </section>
-        <section>
+        <section id="evidence">
           <p class="eyebrow">04 / Evidence</p>
           <h2>What I can show</h2>
           <p>{project.evidence}</p>

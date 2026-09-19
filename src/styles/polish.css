@@ -1,0 +1,358 @@
+/* Site-wide finish: the same glass, dark tiles and pills as the hero and the project cards. */
+:root {
+  --tile: #242938;
+  --hair: #101a2a14;
+  --glass: linear-gradient(155deg, #ffffffc4 0%, #f7f9fd9e 50%, #eef3faad 100%);
+  --glass-shadow:
+    0 0 0 1px var(--hair),
+    0 1px 0 #ffffff inset,
+    0 1px 2px #101a2a0d,
+    0 30px 60px -32px #1b3a7a47;
+}
+
+/* Header: open at the top of the page, then it tucks into a floating glass bar. */
+.header.wrap {
+  top: 0;
+  z-index: 30;
+  border-bottom-color: transparent;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  transition:
+    width 600ms var(--ease-spatial),
+    min-height 600ms var(--ease-spatial),
+    padding 600ms var(--ease-spatial),
+    translate 600ms var(--ease-spatial),
+    border-radius 600ms var(--ease-spatial),
+    background-color 400ms,
+    box-shadow 400ms;
+}
+.header .wordmark {
+  transition: font-size 600ms var(--ease-spatial);
+}
+.header.wrap.is-floating {
+  width: min(860px, calc(100% - 24px));
+  min-height: 60px;
+  padding-inline: 24px 10px;
+  translate: 0 12px;
+  border-radius: 999px;
+  background-color: #ffffffbd;
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow:
+    0 0 0 1px var(--hair),
+    0 1px 0 #ffffff inset,
+    0 18px 40px -22px #1b3a7a59;
+}
+.header.is-floating .wordmark {
+  font-size: 28px;
+}
+.header.is-floating .menu-button {
+  min-height: 40px;
+}
+/* A reading line along the bar, driven by scroll where the browser supports it. */
+@supports (animation-timeline: scroll()) {
+  .header.wrap::after {
+    content: "";
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 0;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform-origin: left;
+    opacity: 0;
+    transition: opacity 400ms;
+    animation: read-progress linear both;
+  }
+  /* Kept apart so a minifier cannot fold the timeline into the shorthand. */
+  .header.wrap[class]::after {
+    animation-timeline: scroll(root);
+  }
+  .header.wrap.is-floating::after {
+    opacity: 0.7;
+  }
+}
+@keyframes read-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (min-width: 641px) {
+  .site-nav {
+    gap: 4px;
+  }
+  .site-nav .nav-link {
+    min-height: 40px;
+    padding-inline: 15px;
+    border-radius: 999px;
+    transition: background 250ms, color 250ms;
+  }
+  .site-nav .nav-link::after {
+    display: none;
+  }
+  .site-nav .nav-link:hover {
+    background: #101a2a0b;
+  }
+  .site-nav .nav-link[aria-current] {
+    background: #2455d614;
+    color: var(--accent);
+  }
+  .header .site-nav > a.nav-link:last-of-type {
+    margin-left: 6px;
+    padding-inline: 18px 16px;
+    background: var(--tile);
+    color: #fff;
+  }
+  .header .site-nav > a.nav-link:last-of-type:hover {
+    background: var(--accent);
+  }
+}
+.menu-button {
+  background: #ffffffb3;
+  border-color: var(--hair);
+}
+
+/* Page grid in a cool slate: clearly visible, without the blue tint that read as lavender. */
+:root {
+  --grid: #3c5a821c;
+}
+
+/* Glass panel for experience, lit by two blue pools like the project cards. */
+.experience {
+  position: relative;
+  isolation: isolate;
+  padding: 24px 0 72px;
+  background: transparent;
+}
+.experience::before {
+  content: "";
+  position: absolute;
+  inset: 10% 8%;
+  z-index: -1;
+  background:
+    radial-gradient(closest-side at 18% 30%, #2455d62b, transparent),
+    radial-gradient(closest-side at 85% 70%, #38a3f224, transparent);
+  filter: blur(40px);
+  pointer-events: none;
+}
+.experience .experience-layout {
+  padding: clamp(28px, 5.5vw, 72px);
+  border: 1px solid #ffffffd9;
+  border-radius: 32px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: var(--glass-shadow);
+}
+.experience-list article {
+  border-top-color: var(--hair);
+}
+.experience .disclosure {
+  border-top-color: var(--hair);
+}
+/* The heading's line break carries its only space, so it stays on narrow screens. */
+.experience h2 br {
+  display: revert;
+}
+
+/* Disclosure toggles become the same round button as "Read the diagram". */
+.disclosure summary > span[aria-hidden],
+.archive-more summary > span[aria-hidden] {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ffffffb3;
+  box-shadow: inset 0 0 0 1px #101a2a1f;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  transition:
+    transform 400ms var(--ease-spatial),
+    background 250ms,
+    color 250ms,
+    box-shadow 250ms;
+}
+.disclosure summary:hover > span[aria-hidden],
+.archive-more summary:hover > span[aria-hidden],
+.disclosure[open] > summary > span[aria-hidden],
+.archive-more[open] > summary > span[aria-hidden] {
+  background: var(--tile);
+  box-shadow: none;
+  color: #fff;
+}
+
+/* Project facts read as two small chips under each project. */
+.project .project-detail {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.project .project-detail > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #ffffffb3;
+  box-shadow: 0 0 0 1px var(--hair);
+  font: 10px var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.project .project-detail > span:last-child::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Buttons are pills in the tile colour. */
+.button {
+  border-radius: 999px;
+  background: var(--tile);
+  padding-inline: 24px 20px;
+  box-shadow: 0 12px 24px -14px #101a2a99;
+  transition: background 250ms, box-shadow 250ms;
+}
+.button:hover {
+  background: var(--accent);
+  box-shadow: 0 16px 28px -14px #2455d6aa;
+}
+
+/* Case study jump links sit in a glass switch. */
+.case-sections {
+  width: fit-content;
+  gap: 4px;
+  padding: 5px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--glass);
+  box-shadow: var(--glass-shadow);
+}
+.case-sections a {
+  min-height: 38px;
+  padding-inline: 16px;
+  border-radius: 999px;
+  transition: background 250ms, color 250ms;
+}
+.case-sections a:hover {
+  background: #101a2a0b;
+}
+.next-project > span:last-child .icon {
+  transition: transform 400ms var(--ease-spatial);
+}
+.next-project:hover > span:last-child .icon {
+  transform: translate(6px, -6px);
+}
+
+/* Contact is the finale: a dark tile, like the ones floating in the hero. */
+.contact {
+  padding: 16px 0 64px;
+  background: transparent;
+}
+.contact > .wrap {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(32px, 6vw, 84px);
+  border-radius: 36px;
+  background: linear-gradient(150deg, #2a3142 0%, #1d2230 55%, #161a25 100%);
+  color: #fff;
+  box-shadow:
+    0 1px 0 #ffffff1a inset,
+    0 40px 80px -40px #101a2acc;
+}
+.contact > .wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(#ffffff0d 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff0d 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask: radial-gradient(ellipse at 80% 10%, #000, transparent 70%);
+  mask: radial-gradient(ellipse at 80% 10%, #000, transparent 70%);
+}
+.contact > .wrap::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  z-index: -1;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #2f6bff4d, transparent);
+  filter: blur(20px);
+  animation: contact-glow 9s ease-in-out infinite alternate;
+}
+@keyframes contact-glow {
+  to {
+    transform: translate(-12%, 18%) scale(1.15);
+  }
+}
+.contact .eyebrow {
+  color: #ffffff99;
+}
+.contact h2,
+.contact .contact-email {
+  color: #fff;
+}
+.contact .accent {
+  color: #6f9bff;
+}
+.contact .contact-email {
+  border-bottom-color: #ffffff40;
+  transition: border-color 250ms, color 250ms;
+}
+.contact .contact-email:hover {
+  border-bottom-color: #fff;
+  color: #b9ccff;
+}
+.contact .contact-bottom {
+  margin-top: 36px;
+  padding-top: 0;
+  border-top: 0;
+}
+.contact .contact-bottom > div {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.contact .text-link {
+  gap: 12px;
+  padding-inline: 18px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff12;
+  box-shadow: inset 0 0 0 1px #ffffff24;
+  color: #fff;
+  font-size: 13px;
+  transition: background 250ms, color 250ms;
+}
+.contact .text-link:hover {
+  background: #fff;
+  color: var(--tile);
+}
+.contact :focus-visible {
+  outline-color: #b9ccff;
+}
+@media (max-width: 640px) {
+  .experience .experience-layout {
+    border-radius: 24px;
+  }
+  .contact > .wrap {
+    border-radius: 26px;
+  }
+}

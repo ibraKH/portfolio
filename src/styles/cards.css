@@ -1,0 +1,317 @@
+/* Project cards: frosted glass over the page grid, lit from behind and by the cursor.
+   Only the holder is styled here; the illustrations and their motion are untouched. */
+figure.project-visual {
+  --hair: #101a2a14;
+  --tile: #242938;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "media" "extra" "caption" "foot";
+  container-type: inline-size;
+  margin: 0;
+  border: 1px solid #ffffffd9;
+  border-radius: 26px;
+  background: linear-gradient(155deg, #ffffffc4 0%, #f7f9fd9e 50%, #eef3faad 100%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow:
+    0 0 0 1px var(--hair),
+    0 1px 0 #ffffff inset,
+    0 1px 2px #101a2a0d,
+    0 30px 60px -32px #1b3a7a47;
+  overflow: hidden;
+  transition: box-shadow 500ms var(--ease-spatial);
+}
+/* The cursor carries a soft light inside the glass and along its edge. */
+figure.project-visual::before,
+figure.project-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms var(--ease-spatial);
+}
+figure.project-visual::before {
+  z-index: -1;
+  background: radial-gradient(460px circle at var(--light-x, 50%) var(--light-y, 0%), #2455d612, transparent 65%);
+}
+figure.project-visual::after {
+  z-index: 4;
+  padding: 1px;
+  background: radial-gradient(280px circle at var(--light-x, 50%) var(--light-y, 0%), #2455d68c, transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+figure.project-visual:hover::before,
+figure.project-visual:hover::after {
+  opacity: 1;
+}
+figure.project-visual:hover {
+  box-shadow:
+    0 0 0 1px #2455d61f,
+    0 1px 0 #ffffff inset,
+    0 1px 2px #101a2a0d,
+    0 40px 80px -36px #1b3a7a5c;
+}
+/* Colour for the glass to catch: two quiet blue pools behind each homepage card. */
+.visual-link {
+  position: relative;
+  isolation: isolate;
+}
+.visual-link::before {
+  content: "";
+  position: absolute;
+  inset: 6% 4%;
+  z-index: -1;
+  background:
+    radial-gradient(closest-side at 22% 28%, #2455d633, transparent),
+    radial-gradient(closest-side at 82% 78%, #38a3f22b, transparent);
+  filter: blur(34px);
+  pointer-events: none;
+}
+
+/* The glass shows through the illustration backgrounds. */
+.project-visual .illustration,
+.project-visual .project-lab {
+  background: transparent;
+}
+.project-visual .embedding-field > rect:first-of-type {
+  fill: transparent;
+}
+.project-visual > .project-media,
+.project-visual > .project-lab {
+  grid-area: media;
+  border-radius: 26px 26px 0 0;
+}
+
+/* Footer: the caption and the notes toggle share one quiet row. */
+figure.project-visual > figcaption {
+  grid-area: foot;
+  z-index: 1;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  margin: 0 16px;
+  padding: 0 170px 0 6px;
+  border: 0;
+  font: 10px var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  pointer-events: none;
+}
+.project-visual > .visual-notes {
+  grid-area: foot;
+  margin: 0 16px;
+  border-top: 1px solid var(--hair);
+}
+.project-visual .visual-notes summary {
+  justify-content: flex-start;
+  gap: 10px;
+  width: fit-content;
+  min-height: 36px;
+  margin: 11px 0 10px auto;
+  padding: 0 7px 0 15px;
+  border-radius: 99px;
+  background: #ffffffb8;
+  box-shadow: 0 0 0 1px var(--hair), 0 2px 6px -3px #101a2a26;
+  font: 11px var(--body);
+  color: var(--ink);
+  transition: background 250ms, color 250ms, box-shadow 250ms;
+}
+.project-visual .visual-notes summary span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--tile);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  transition: transform 300ms var(--ease-spatial), background 250ms, color 250ms;
+}
+.project-visual .visual-notes summary:hover,
+.project-visual .visual-notes[open] summary {
+  background: var(--tile);
+  color: #fff;
+}
+.project-visual .visual-notes summary:hover span,
+.project-visual .visual-notes[open] summary span {
+  background: #fff;
+  color: var(--tile);
+}
+.project-visual .visual-notes summary:focus-visible {
+  outline-offset: 3px;
+}
+.project-visual .visual-notes ol {
+  padding: 2px 6px 20px 22px;
+  color: var(--ink-soft);
+}
+.project-visual .visual-notes .illustration {
+  border-top: 1px solid var(--hair);
+}
+
+/* Build facts sit as small glass chips instead of a ruled table. */
+.project-visual .evidence-strip {
+  grid-area: extra;
+  gap: 10px;
+  padding: 4px 16px 16px;
+  border: 0;
+}
+.project-visual .evidence-strip > div,
+.project-visual .evidence-strip > div:last-child {
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 16px;
+  background: #ffffffa6;
+  box-shadow: 0 0 0 1px var(--hair), 0 1px 0 #ffffff inset;
+}
+
+/* Pause becomes a floating glass pill on the illustration. */
+.project-visual .illustration-motion-control {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  min-height: 32px;
+  padding: 0 13px 0 11px;
+  border-radius: 99px;
+  background: #ffffffb8;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 0 1px var(--hair), 0 6px 16px -8px #101a2a40;
+  font: 10px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: background 250ms, color 250ms;
+}
+.project-visual .illustration-motion-control:hover {
+  background: var(--tile);
+  color: #fff;
+}
+.project-visual .illustration-motion-control input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.project-visual .illustration-motion-control:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.motion-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.motion-state b {
+  font-weight: 400;
+}
+.motion-state i {
+  width: 8px;
+  height: 9px;
+  border-inline: 2.5px solid currentColor;
+}
+.motion-state .when-paused,
+.illustration-motion-control:has(input:checked) .when-playing {
+  display: none;
+}
+.illustration-motion-control:has(input:checked) .when-paused {
+  display: inline;
+}
+.illustration-motion-control:has(input:checked) .motion-state i {
+  width: 0;
+  height: 0;
+  border-inline: 0;
+  border-left: 8px solid currentColor;
+  border-block: 5px solid transparent;
+}
+
+/* CLIP lab: a segmented switch in the hero's tile colour. */
+.project-visual .experiment-heading {
+  padding: 18px 22px 8px;
+  border: 0;
+}
+.project-visual .project-controls {
+  gap: 4px;
+  margin: 6px 16px 0;
+  padding: 4px;
+  border-radius: 99px;
+  background: #101a2a0a;
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+.project-visual .project-controls label {
+  min-height: 38px;
+  border: 0;
+  border-radius: 99px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  transition: background 300ms var(--ease-spatial), color 300ms, box-shadow 300ms;
+}
+.project-visual .project-controls label:hover {
+  background: #ffffffb8;
+  color: var(--ink);
+}
+.project-visual .project-controls input:checked + label {
+  background: var(--tile);
+  color: #fff;
+  box-shadow: 0 8px 18px -10px #101a2acc;
+}
+.project-visual .project-controls input:focus-visible + label {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.project-visual .experiment-caption {
+  margin: 0 16px;
+  padding: 16px 6px;
+  background: transparent;
+  border-top: 1px solid var(--hair);
+}
+
+/* Cards rise into place; no clip-path, so the soft shadow is never cut off. */
+.project.revealed figure.project-visual {
+  animation: card-rise var(--motion-scene) var(--ease-spatial) both;
+}
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+}
+
+/* Narrow cards stack the caption above the toggle and keep Pause out of the drawing. */
+@container (max-width: 540px) {
+  figure.project-visual > figcaption {
+    grid-area: caption;
+    min-height: 0;
+    padding: 14px 6px 0;
+    border-top: 1px solid var(--hair);
+  }
+  .project-visual > .visual-notes {
+    border-top: 0;
+  }
+  .project-visual .visual-notes summary {
+    margin: 10px 0 14px;
+  }
+  .project-visual .illustration-motion-control {
+    position: static;
+    grid-area: extra;
+    justify-self: start;
+    margin: 4px 16px 0;
+  }
+  .project-visual .evidence-strip {
+    gap: 6px;
+    padding-inline: 12px;
+  }
+  .project-visual .evidence-strip > div,
+  .project-visual .evidence-strip > div:last-child {
+    padding: 12px 10px;
+    border-radius: 12px;
+  }
+}

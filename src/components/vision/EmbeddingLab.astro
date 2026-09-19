@@ -1,0 +1,173 @@
+---
+const groups = [
+  { name: "mountain", x: 210, y: 153, color: "var(--accent)" },
+  { name: "flower", x: 505, y: 179, color: "var(--signal)" },
+  { name: "boat", x: 366, y: 314, color: "var(--ink-soft)" },
+];
+---
+
+<div class="embedding-lab project-lab">
+  <div class="experiment-heading">
+    <span>CLIP / SHARED REPRESENTATION</span>
+    <span>ILLUSTRATIVE</span>
+  </div>
+  <fieldset class="lab-controls project-controls">
+    <legend class="sr-only">
+      Highlight an illustrative image and text concept
+    </legend>
+    {groups.map((group, i) => (
+      <>
+        <input
+          type="radio"
+          name="embedding-concept"
+          id={`concept-${group.name}`}
+          checked={i === 0}
+        />
+        <label for={`concept-${group.name}`}>“{group.name}”</label>
+      </>
+    ))}
+  </fieldset>
+  <svg
+    class="embedding-field"
+    viewBox="0 0 700 420"
+    role="img"
+    aria-label="Illustrative embedding space. Mountain, flower and boat image and text nodes form three groups. Positions are hand-authored, not experimental embeddings."
+  >
+    <defs>
+      <pattern
+        id="embedding-grid"
+        width="22"
+        height="22"
+        patternUnits="userSpaceOnUse"
+      >
+        <circle cx="1" cy="1" r=".8" fill="var(--line)" />
+      </pattern>
+    </defs>
+    <rect width="700" height="420" fill="var(--surface)" />
+    <rect width="700" height="420" fill="url(#embedding-grid)" />
+    <g fill="none" stroke="var(--line)">
+      <ellipse
+        cx="350"
+        cy="217"
+        rx="265"
+        ry="146"
+        transform="rotate(-17 350 217)"
+      />
+      <ellipse
+        cx="350"
+        cy="217"
+        rx="182"
+        ry="102"
+        transform="rotate(26 350 217)"
+      />
+      <path d="M60 290L642 157M294 37L402 393" stroke-dasharray="3 6" />
+    </g>
+    {groups.map((group) => (
+      <g class={`embedding-group cluster-${group.name}`}>
+        <ellipse
+          cx={group.x}
+          cy={group.y}
+          rx="85"
+          ry="59"
+          fill={group.color}
+          fill-opacity=".055"
+          stroke={group.color}
+          stroke-opacity=".25"
+        />
+        {Array.from({ length: 20 }, (_, j) => {
+          const angle = j * 2.39996;
+          const radius = 9 + Math.sqrt(j) * 13;
+          return (
+            <circle
+              cx={group.x + Math.cos(angle) * radius}
+              cy={group.y + Math.sin(angle) * radius * 0.63}
+              r={j % 4 === 0 ? 3.8 : 2.3}
+              fill={group.color}
+              opacity={0.45 + (j % 3) * 0.2}
+            />
+          );
+        })}
+        <path
+          class="embedding-connection"
+          d={`M${group.x - 55} ${group.y - 52}L${group.x + 38} ${group.y + 32}`}
+          fill="none"
+          stroke={group.color}
+          stroke-width="1.5"
+          stroke-dasharray="4 5"
+        />
+        <g transform={`translate(${group.x - 90} ${group.y - 86})`}>
+          <rect
+            width="83"
+            height="61"
+            rx="3"
+            fill="var(--paper)"
+            stroke={group.color}
+          />
+          {group.name === "mountain" && (
+            <>
+              <path
+                d="M9 49L29 20L44 36L59 14L75 49Z"
+                fill="var(--geometry-light)"
+              />
+              <path d="M59 14L50 28H66Z" fill="var(--accent)" />
+            </>
+          )}
+          {group.name === "flower" && (
+            <>
+              <path d="M42 51V30" stroke="var(--ink-soft)" stroke-width="2" />
+              {[0, 1, 2, 3, 4].map((i) => (
+                <circle
+                  cx={42 + Math.cos(i * 1.257) * 11}
+                  cy={26 + Math.sin(i * 1.257) * 11}
+                  r="7"
+                  fill="var(--geometry-light)"
+                />
+              ))}
+              <circle cx="42" cy="26" r="5" fill="var(--signal)" />
+            </>
+          )}
+          {group.name === "boat" && (
+            <>
+              <path d="M12 41H71L61 50H23Z" fill="var(--ink-soft)" />
+              <path d="M39 12V38H62Z" fill="var(--geometry-mid)" />
+              <path d="M35 19V38H18Z" fill="var(--geometry-light)" />
+            </>
+          )}
+        </g>
+        <g transform={`translate(${group.x + 13} ${group.y + 28})`}>
+          <rect
+            width="112"
+            height="28"
+            rx="2"
+            fill="var(--paper)"
+            stroke={group.color}
+          />
+          <text
+            x="56"
+            y="18"
+            text-anchor="middle"
+            font-size="12"
+            font-family="monospace"
+            fill={group.color}
+          >
+            “{group.name}”
+          </text>
+        </g>
+      </g>
+    ))}
+    <text
+      x="24"
+      y="399"
+      fill="var(--muted)"
+      font-family="monospace"
+      font-size="10"
+    >
+      CONCEPTUAL PROJECTION / NOT MEASURED EMBEDDINGS
+    </text>
+  </svg>
+  <div class="experiment-caption">
+    <p>
+      Images and words. <strong>A shared space.</strong> Select a concept.
+    </p>
+  </div>
+</div>

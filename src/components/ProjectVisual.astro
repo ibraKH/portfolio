@@ -4,6 +4,9 @@ import Clip from "./illustrations/Clip.astro";
 import Techlauncher from "./illustrations/Techlauncher.astro";
 import Nanogpt from "./illustrations/Nanogpt.astro";
 import "../styles/illustrations.css";
+import "../styles/project-labs.css";
+import "../styles/cards.css";
+import EmbeddingLab from "./vision/EmbeddingLab.astro";
 interface Props {
   slug: string;
   title: string;
@@ -26,9 +29,46 @@ const Illustration = illustrations[slug as keyof typeof illustrations];
   class:list={["project-visual", "visual-" + slug]}
   style={`view-transition-name: visual-${slug}`}
 >
-  <Media href={href} class="project-media">
-    <Illustration label={`${title}: ${caption}`} />
-  </Media>
+  {slug === "clip" ? (
+    <EmbeddingLab />
+  ) : (
+    <Media href={href} class="project-media">
+      <Illustration label={`${title}: ${caption}`} />
+    </Media>
+  )}
+  {slug === "roya" && (
+    <label class="illustration-motion-control">
+      <input type="checkbox" class="roya-pause" />
+      <span class="sr-only">Pause animation</span>
+      <span class="motion-state" aria-hidden="true">
+        <i></i>
+        <b class="when-playing">Pause</b>
+        <b class="when-paused">Play</b>
+      </span>
+    </label>
+  )}
+  {slug === "techlauncher" && (
+    <div
+      class="evidence-strip"
+      aria-label="Project scope, as documented in the case study"
+    >
+      {[
+        { value: 23, label: "Database tables" },
+        { value: 14, label: "Migrations" },
+        { value: 32, label: "Jest test files" },
+      ].map((stat) => (
+        <div>
+          <strong>
+            <span class="sr-only">{stat.value}</span>
+            <b data-count={stat.value} aria-hidden="true">
+              {stat.value}
+            </b>
+          </strong>
+          <span>{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  )}
   <figcaption>{caption}</figcaption>
   <details class="visual-notes">
     <summary>
@@ -39,19 +79,41 @@ const Illustration = illustrations[slug as keyof typeof illustrations];
         <li>{step}</li>
       ))}
     </ol>
+    {slug === "clip" && <Illustration label={`${title}: ${caption}`} />}
   </details>
 </figure>
 
 <script>
-  // Illustration motion only runs while the figure is on screen.
+  import { initEvidence } from "../lib/animation/evidence";
+  initEvidence();
+  import { initProjectDepth } from "../lib/animation/parallax";
+  initProjectDepth();
+  import { initCardLight } from "../lib/animation/card-light";
+  initCardLight();
+  // Restore Roya's loop only while visible; never animate a hidden tab.
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries) =>
+    const visible = new Map<Element, boolean>();
+    const sync = () =>
+      visible.forEach((shown, element) =>
+        element.classList.toggle("is-paused", document.hidden || !shown),
+      );
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) =>
-        entry.target.classList.toggle("is-paused", !entry.isIntersecting),
-      ),
-    );
-    document
-      .querySelectorAll(".illustration")
-      .forEach((el) => observer.observe(el));
+        visible.set(entry.target, entry.isIntersecting),
+      );
+      sync();
+    });
+    document.querySelectorAll(".illustration").forEach((element) => {
+      visible.set(element, false);
+      element.classList.add("is-paused");
+      observer.observe(element);
+    });
+    document.addEventListener("visibilitychange", sync);
+    window.addEventListener("pagehide", (event) => {
+      if (event.persisted) return;
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+      visible.clear();
+    });
   }
 </script>

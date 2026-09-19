@@ -1,0 +1,141 @@
+.project-lab {
+  background: var(--surface);
+}
+.experiment-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  font: 9px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.project-controls {
+  padding-inline: 16px;
+}
+.project-controls label {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-color: var(--line);
+}
+.project-controls input:checked + label {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
+}
+.embedding-field {
+  width: 100%;
+  height: auto;
+}
+.experiment-caption {
+  min-height: 82px;
+  padding: 16px 20px;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+.experiment-caption strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.embedding-group {
+  opacity: 0.25;
+  transition: opacity var(--motion-reveal);
+}
+.embedding-lab:has(#concept-mountain:checked) .cluster-mountain,
+.embedding-lab:has(#concept-flower:checked) .cluster-flower,
+.embedding-lab:has(#concept-boat:checked) .cluster-boat {
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .embedding-lab:has(label:hover) .embedding-group {
+    opacity: 0.25;
+  }
+  .embedding-lab:has(label[for="concept-mountain"]:hover) .cluster-mountain,
+  .embedding-lab:has(label[for="concept-flower"]:hover) .cluster-flower,
+  .embedding-lab:has(label[for="concept-boat"]:hover) .cluster-boat {
+    opacity: 1;
+  }
+}
+.evidence-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+}
+.evidence-strip > div {
+  padding: 16px;
+  border-right: 1px solid var(--line);
+}
+.evidence-strip > div:last-child {
+  border: 0;
+}
+.evidence-strip strong {
+  display: block;
+  font: 30px var(--display);
+  color: var(--ink);
+}
+.evidence-strip span {
+  display: block;
+  font: 9px var(--mono);
+  color: var(--muted);
+  margin-top: 4px;
+}
+.visual-notes .illustration {
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 800px) {
+  .experiment-heading {
+    font-size: 8px;
+    padding: 12px;
+  }
+  .experiment-heading > span:last-child {
+    display: none;
+  }
+  .project-controls {
+    padding-inline: 8px;
+  }
+  .project-controls label {
+    font-size: 8px;
+    gap: 4px;
+  }
+  .project-controls label span {
+    display: none;
+  }
+  .experiment-caption {
+    font-size: 11px;
+    padding: 12px;
+    min-height: 88px;
+  }
+  .evidence-strip > div {
+    padding: 12px 8px;
+  }
+  .evidence-strip strong {
+    font-size: 24px;
+  }
+  .evidence-strip span {
+    font-size: 8px;
+  }
+}
+.evidence-strip strong b {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.evidence-strip strong .sr-only {
+  margin: -1px;
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .embedding-field > .embedding-group {
+    transform: translate(var(--depth-x, 0px), var(--depth-y, 0px));
+    transition:
+      transform var(--motion-reveal) var(--ease-spatial),
+      opacity var(--motion-reveal);
+  }
+}
+@media (max-width: 800px) {
+  .project-controls label {
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,91 @@
+---
+import { ASPECT } from "../lib/animation/drift";
+// Every tile shares one dark face. "icon" logos keep their own colours, "mark" logos are
+// one-colour glyphs tinted with their brand colour (white when none is given).
+type Tech = { name: string; icon: string; style: "icon" | "mark"; color?: string };
+// Listed by importance: the first ones land nearest the middle.
+const stack: Tech[] = [
+  { name: "PyTorch", icon: "pytorch", style: "icon" },
+  { name: "OpenCV", icon: "opencv", style: "icon" },
+  { name: "Python", icon: "python", style: "icon" },
+  { name: "C++", icon: "cpp", style: "mark", color: "#659ad2" },
+  { name: "TypeScript", icon: "typescript-mark", style: "icon" },
+  { name: "React", icon: "react", style: "icon" },
+  { name: "GitHub", icon: "github", style: "mark" },
+  { name: "JavaScript", icon: "javascript-mark", style: "icon" },
+  { name: "Node.js", icon: "nodejs", style: "icon" },
+  { name: "PostgreSQL", icon: "postgresql", style: "icon" },
+  { name: "AWS", icon: "aws-light", style: "icon" },
+  { name: "Git", icon: "git", style: "icon" },
+  { name: "Arduino", icon: "arduino", style: "mark", color: "#00a8ae" },
+  { name: "HTML", icon: "html", style: "icon" },
+  { name: "CSS", icon: "css", style: "icon" },
+  { name: "Svelte", icon: "svelte", style: "icon" },
+  { name: "Figma", icon: "figma", style: "icon" },
+  { name: "Express", icon: "express", style: "mark" },
+  { name: "Angular", icon: "angular", style: "icon" },
+  { name: "MySQL", icon: "mysql", style: "mark" },
+  { name: "Firebase", icon: "firebase", style: "icon" },
+];
+// A loose 6 x 4 grid with its corners dropped, jittered so it never reads as rows.
+let seed = 7;
+const random = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const cols = 6;
+const rows = 4;
+const slots = Array.from({ length: cols * rows }, (_, i) => ({
+  x: ((i % cols) + 0.5) / cols + (random() - 0.5) * 0.06,
+  y: ((Math.floor(i / cols) + 0.5) / rows) * ASPECT + (random() - 0.5) * 0.06,
+})).sort(
+  (a, b) => Math.hypot(a.x - 0.5, a.y - ASPECT / 2) - Math.hypot(b.x - 0.5, b.y - ASPECT / 2),
+);
+const tiles = stack.map((tech, i) => ({
+  ...tech,
+  x: slots[i].x,
+  y: slots[i].y,
+  size: i < 3 ? 0.118 : 0.1 + random() * 0.012,
+  tilt: Math.round((random() - 0.5) * 16),
+}));
+const stackLabel = `Technology icons: ${stack.map((tech) => tech.name).join(", ")}.`;
+---
+
+<div class="tech-field" role="img" aria-label={stackLabel} style={`--aspect:${ASPECT};`}>
+  {tiles.map((tech, i) => (
+    <div
+      class="tile-node"
+      data-tile={`${tech.x},${tech.y},${tech.size},${tech.tilt}`}
+      style={`transform:translate(${tech.x * 100}cqw, ${tech.y * 100}cqw) translate(-50%, -50%);width:${tech.size * 100}cqw;--i:${i};`}
+      aria-hidden="true"
+    >
+      <div class="tile" style={`rotate:${tech.tilt}deg;`}>
+        {tech.style === "mark" ? (
+          <span class="tile-glyph" style={`--glyph:url(/images/icons/${tech.icon}.svg);${tech.color ? `background:${tech.color};` : ""}`}></span>
+        ) : (
+          <img src={`/images/icons/${tech.icon}.svg`} alt="" width="64" height="64" decoding="async" draggable="false" />
+        )}
+      </div>
+      <span class="tile-label">{tech.name}</span>
+    </div>
+  ))}
+</div>
+
+<script>
+  import { initDrift } from "../lib/animation/drift";
+  document.querySelectorAll<HTMLElement>(".tech-field").forEach(initDrift);
+</script>
+
+<style>
+  .tech-field { position: relative; width: 100%; max-width: 620px; aspect-ratio: 1 / var(--aspect); container-type: inline-size; justify-self: center; user-select: none; -webkit-user-select: none; }
+  .tile-node { position: absolute; left: 0; top: 0; cursor: grab; will-change: transform; }
+  .tile-node:hover, .tile-node.is-named { z-index: 2; }
+  .tile-node.is-held { z-index: 3; cursor: grabbing; }
+  .tile { position: relative; display: grid; place-items: center; aspect-ratio: 1; border-radius: 23%; overflow: hidden; background: #242938; box-shadow: 0 1px 0 #ffffff14 inset, 0 10px 22px -10px #101a2a66, 0 2px 5px -2px #101a2a33; transition: scale 380ms var(--ease-spatial, ease), box-shadow 380ms var(--ease-spatial, ease); animation: tile-in 700ms var(--ease-spatial, ease-out) calc(var(--i) * 45ms + 120ms) backwards; }
+  .tile img { width: 64%; height: 64%; object-fit: contain; pointer-events: none; }
+  .tile-glyph { width: 64%; aspect-ratio: 1; background: #fff; -webkit-mask: var(--glyph) center / contain no-repeat; mask: var(--glyph) center / contain no-repeat; }
+  .tile-node:hover .tile, .tile-node.is-named .tile { scale: 1.12; box-shadow: 0 1px 0 #ffffff14 inset, 0 20px 34px -14px #101a2a80, 0 4px 10px -4px #101a2a40; }
+  .tile-node.is-held .tile { scale: 1.18; }
+  .tile-label { position: absolute; top: calc(100% + 12px); left: 50%; translate: -50% -4px; padding: 3px 8px; border-radius: 99px; background: var(--ink); font: 10px var(--mono); letter-spacing: .03em; color: var(--paper); white-space: nowrap; opacity: 0; transition: opacity 250ms, translate 250ms var(--ease-spatial, ease); pointer-events: none; }
+  .tile-node:hover .tile-label, .tile-node.is-named .tile-label { opacity: 1; translate: -50% 0; }
+  @keyframes tile-in { from { opacity: 0; scale: .4; } }
+  @media (max-width: 800px) { .tech-field { max-width: 480px; } }
+  @media (prefers-reduced-motion: reduce) { .tile { animation: none; transition: none; } .tile-label { transition: none; } }
+</style>

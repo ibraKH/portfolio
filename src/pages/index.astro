@@ -1,64 +1,76 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import VisionStage from "../components/VisionStage.astro";
+import TechConstellation from "../components/TechConstellation.astro";
 import ProjectVisual from "../components/ProjectVisual.astro";
 import Icon from "../components/Icon.astro";
+import "../styles/lab.css";
 import { projects } from "../data/projects";
+const previews: Record<string, { category: string; summary: string }> = {
+  roya: {
+    category: "Multimodal AI",
+    summary:
+      "Object detection, text recognition and location context in one AI application.",
+  },
+  clip: {
+    category: "Vision-language learning",
+    summary:
+      "Adapting CLIP to recognise images with just a few labelled examples.",
+  },
+  techlauncher: {
+    category: "Scientific software",
+    summary:
+      "Collaborative scientific software, built with an eight-person team.",
+  },
+  nanogpt: {
+    category: "Language models",
+    summary:
+      "Three matched GPT models, with a focus on trustworthy evaluation.",
+  },
+};
 const scholarshipPost =
   "https://www.linkedin.com/posts/ibrahimalharthi_%D8%A7%D9%84%D8%AD%D9%85%D8%AF%D9%84%D9%84%D9%87-%D8%AD%D9%85%D8%AF%D8%A7-%D9%83%D8%AB%D9%8A%D8%B1%D8%A7-%D8%B7%D9%8A%D8%A8%D8%A7-%D9%85%D8%A8%D8%A7%D8%B1%D9%83%D8%A7-%D9%81%D9%8A%D9%87-activity-7398401676962963456-0y8H";
 ---
 
 <Layout>
-  <section class="hero wrap" aria-labelledby="hero-title">
-    <div class="hero-copy">
-      <p class="eyebrow hero-intro">
-        Ibrahim Alharthi <span class="small-line"></span> Machine Learning
-        Engineer
-      </p>
-      <h1 id="hero-title">
-        Computer Vision
-        <br />
-        &amp; <span class="accent">AI Systems.</span>
-      </h1>
-      <p class="hero-statement">
-        I teach software to read images, then build the product around it, from
-        the first model experiment to something people can actually use.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#work">
-          Explore work <Icon name="arrow-down-right" />
-        </a>
-        <a class="text-link" href="/Ibrahim-Alharthi-CV.pdf" download>
-          Download CV <Icon name="arrow-down" />
-        </a>
+  <div class="hero-scroll">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow hero-intro">
+          <span class="hero-name">Ibrahim Alharthi</span>
+          <span class="small-line"></span>
+          <span>Machine Learning Engineer</span>
+        </p>
+        <h1 id="hero-title">
+          <span>I build</span>
+          <span>machines</span>
+          <span>
+            that <em class="accent">see.</em>
+          </span>
+        </h1>
+        <p class="hero-discipline">
+          Computer Vision <span>/</span> AI Systems
+        </p>
       </div>
-      <p class="hero-note">Half researcher, half full-stack engineer.</p>
-    </div>
-    <VisionStage />
-  </section>
+      <TechConstellation />
+    </section>
+  </div>
   <section id="work" class="work wrap" aria-labelledby="work-title">
     <div class="section-heading" data-reveal>
-      <p class="eyebrow">01 / Selected work</p>
+      <p class="eyebrow">01 / Projects</p>
       <h2 id="work-title">
-        Things I’ve built<span class="accent">.</span>
+        Selected work<span class="accent">.</span>
       </h2>
-      <p>
-        Vision, learning,
-        <br />
-        and the software that holds them together.
-      </p>
     </div>
     {projects.map((project) => (
       <article class:list={["project", `project-${project.slug}`]} data-reveal>
         <div class="project-info">
           <p class="eyebrow">
-            {project.number} / {project.category}
+            {project.number} / {previews[project.slug].category}
           </p>
-          <h3>
+          <h3 style={`view-transition-name: title-${project.slug}`}>
             <a href={`/work/${project.slug}/`}>{project.title}</a>
           </h3>
-          <p class="project-summary">{project.summary}</p>
-          <p class="project-stack">{project.stack}</p>
+          <p class="project-summary">{previews[project.slug].summary}</p>
           <a class="text-link project-link" href={`/work/${project.slug}/`}>
             Read case study <Icon name="arrow-up-right" />
             <span class="sr-only">: {project.title}</span>
@@ -73,18 +85,22 @@ const scholarshipPost =
         </div>
       </article>
     ))}
-    <div class="archive" data-reveal>
-      <p class="eyebrow">Earlier explorations</p>
-      <a class="text-link" href="https://github.com/ibraKH/fullstack-app">
-        Full-stack commerce <Icon name="arrow-up-right" />
-      </a>
-      <a class="text-link" href="https://github.com/ibraKH/imageProcessing">
-        Image processing API <Icon name="arrow-up-right" />
-      </a>
-      <a class="text-link" href="/map/">
-        Web learning map <Icon name="arrow-up-right" />
-      </a>
-    </div>
+    <details class="archive archive-more">
+      <summary>
+        More projects <span aria-hidden="true">+</span>
+      </summary>
+      <div class="archive-links">
+        <a class="text-link" href="https://github.com/ibraKH/fullstack-app">
+          Full-stack commerce <Icon name="arrow-up-right" />
+        </a>
+        <a class="text-link" href="https://github.com/ibraKH/imageProcessing">
+          Image processing API <Icon name="arrow-up-right" />
+        </a>
+        <a class="text-link" href="/map/">
+          Web learning map <Icon name="arrow-up-right" />
+        </a>
+      </div>
+    </details>
   </section>
   <section
     id="experience"
@@ -95,13 +111,10 @@ const scholarshipPost =
       <div data-reveal>
         <p class="eyebrow">02 / Engineering experience</p>
         <h2 id="experience-title">
-          From architecture <br />
-          to delivery.
+          Built with teams.
+          <br />
+          Shipped with care.
         </h2>
-        <p class="section-intro">
-          I like owning the hard parts, and I like getting a team to pull them
-          together.
-        </p>
       </div>
       <div class="experience-list">
         <article data-reveal>
@@ -111,86 +124,53 @@ const scholarshipPost =
             ANU TechLauncher <span>Capstone engagement</span>
           </p>
           <p>
-            Led an eight-person team building a collaborative scientific
-            platform for TERN and CSIRO. Owned the backend and CI, from
-            authentication and geospatial data to real-time collaboration.
+            Led an eight-person team building a scientific platform for TERN and
+            CSIRO. Owned the backend and CI.
           </p>
           <a class="text-link" href="/work/techlauncher/">
             Read the case study <Icon name="arrow-up-right" />
           </a>
         </article>
-        <article data-reveal>
-          <p class="eyebrow">Feb to Jun 2024 / Riyadh</p>
-          <h3>Software Engineer</h3>
-          <p class="company">Nortal</p>
-          <p>
-            Built responsive production interfaces in React and JavaScript,
-            working with designers and engineers to turn requirements into
-            features people use.
-          </p>
-        </article>
-        <article data-reveal>
-          <p class="eyebrow">Jul to Aug 2023 / Taif</p>
-          <h3>Computer Engineering Trainee</h3>
-          <p class="company">King Fahd Air Base</p>
-          <p>
-            Worked across networking, IP telephony and maintenance: configuring
-            lines, keeping the network running, and tracking down hardware and
-            software faults.
-          </p>
-        </article>
-        <article data-reveal>
-          <p class="eyebrow">Dec 2022 to Apr 2023 / Remote</p>
-          <h3>Freelance Web Developer</h3>
-          <p>
-            Built and shipped a responsive company website with React and
-            Bootstrap, and looked after its SEO from start to finish.
-          </p>
-        </article>
+        <details class="experience-more disclosure">
+          <summary>
+            Earlier experience <span class="summary-note">2022–2024</span>
+            <span aria-hidden="true">+</span>
+          </summary>
+          <article data-reveal>
+            <p class="eyebrow">Feb to Jun 2024 / Riyadh</p>
+            <h3>Software Engineer</h3>
+            <p class="company">Nortal</p>
+            <p>
+              Built responsive production interfaces in React and JavaScript,
+              working with designers and engineers to turn requirements into
+              features people use.
+            </p>
+          </article>
+          <article data-reveal>
+            <p class="eyebrow">Jul to Aug 2023 / Taif</p>
+            <h3>Computer Engineering Trainee</h3>
+            <p class="company">King Fahd Air Base</p>
+            <p>
+              Worked across networking, IP telephony and maintenance:
+              configuring lines, keeping the network running, and tracking down
+              hardware and software faults.
+            </p>
+          </article>
+          <article data-reveal>
+            <p class="eyebrow">Dec 2022 to Apr 2023 / Remote</p>
+            <h3>Freelance Web Developer</h3>
+            <p>
+              Built and shipped a responsive company website with React and
+              Bootstrap, and looked after its SEO from start to finish.
+            </p>
+          </article>
+        </details>
       </div>
-    </div>
-  </section>
-  <section class="capabilities wrap" aria-labelledby="capabilities-title">
-    <div class="section-heading" data-reveal>
-      <p class="eyebrow">03 / What I bring</p>
-      <h2 id="capabilities-title">Depth, with range.</h2>
-    </div>
-    <div class="capability-list">
-      <a href="/work/clip/" data-reveal>
-        <span class="eyebrow">01</span>
-        <h3>Vision &amp; learning</h3>
-        <p>
-          PyTorch, CLIP, YOLO, OpenCV.
-          <br />
-          Taking experiments all the way to working pipelines.
-        </p>
-        <Icon name="arrow-up-right" />
-      </a>
-      <a href="/work/roya/" data-reveal>
-        <span class="eyebrow">02</span>
-        <h3>AI software systems</h3>
-        <p>
-          Python, FastAPI, React.
-          <br />
-          Putting models inside applications people can use.
-        </p>
-        <Icon name="arrow-up-right" />
-      </a>
-      <a href="/work/techlauncher/" data-reveal>
-        <span class="eyebrow">03</span>
-        <h3>Engineering ownership</h3>
-        <p>
-          TypeScript, PostGIS, Docker, CI/CD.
-          <br />
-          Designing it, building it with a team, and seeing it shipped.
-        </p>
-        <Icon name="arrow-up-right" />
-      </a>
     </div>
   </section>
   <section id="about" class="about wrap" aria-labelledby="about-title">
     <div data-reveal>
-      <p class="eyebrow">04 / A little about me</p>
+      <p class="eyebrow">03 / About</p>
       <h2 id="about-title">
         A builder <br />
         at heart<span class="accent">.</span>
@@ -198,64 +178,86 @@ const scholarshipPost =
     </div>
     <div class="about-copy" data-reveal>
       <p class="large-copy">
-        I’m Ibrahim. I work where machine learning meets software engineering:
-        figuring out what a model can really do, then building the thing that
-        puts it to work.
+        I’m Ibrahim, a machine learning engineer with a background in computer
+        engineering and full-stack development.
       </p>
-      <p>
-        I trained as a computer engineer, have worked across the whole stack,
-        and spent a year leading an eight-person team through a serious software
-        build. The problems I enjoy most are the stubborn ones, especially when
-        cracking them takes a whole team.
-      </p>
-      <div class="education">
-        <p class="eyebrow">Education</p>
-        <h3>
-          Master of Machine Learning
-          <br />
-          and Computer Vision
-        </h3>
+      <details class="disclosure background-details">
+        <summary>
+          Background &amp; education <span aria-hidden="true">+</span>
+        </summary>
         <p>
-          Australian National University · 2024 to present
-          <br />
-          Expected conferral: December 2026
+          I trained as a computer engineer, have worked across the whole stack,
+          and spent a year leading an eight-person team through a serious
+          software build. The problems I enjoy most are the stubborn ones,
+          especially when cracking them takes a whole team.
         </p>
-        <a class="text-link scholarship" href={scholarshipPost}>
-          SDAIA AI Scholarship recipient, 2024
-          <span class="sr-only">(LinkedIn post)</span>
-          <Icon name="arrow-up-right" />
-        </a>
-        <h3>
-          Bachelor of Engineering
-          <br />
-          in Computer Engineering
-        </h3>
-        <p>Taif University · 2018–2023</p>
-        <p class="qualification">
-          Full Stack JavaScript Developer Nanodegree
-          <br />
-          Udacity · 2022
-        </p>
-      </div>
+        <div class="education">
+          <p class="eyebrow">Education</p>
+          <h3>
+            Master of Machine Learning
+            <br />
+            and Computer Vision
+          </h3>
+          <p>
+            Australian National University · 2024 to present
+            <br />
+            Expected conferral: December 2026
+          </p>
+          <a class="text-link scholarship" href={scholarshipPost}>
+            SDAIA AI Scholarship recipient, 2024
+            <span class="sr-only">(LinkedIn post)</span>
+            <Icon name="arrow-up-right" />
+          </a>
+          <h3>
+            Bachelor of Engineering
+            <br />
+            in Computer Engineering
+          </h3>
+          <p>Taif University · 2018–2023</p>
+          <p class="qualification">
+            Full Stack JavaScript Developer Nanodegree
+            <br />
+            Udacity · 2022
+          </p>
+        </div>
+      </details>
+      <details class="disclosure skills-details">
+        <summary>
+          Skills &amp; tools <span aria-hidden="true">+</span>
+        </summary>
+        <div class="skills-list">
+          <a href="/work/clip/">
+            <strong>Vision &amp; learning</strong>
+            <span>PyTorch, CLIP, YOLO, OpenCV</span>
+            <Icon name="arrow-up-right" />
+          </a>
+          <a href="/work/roya/">
+            <strong>AI software systems</strong>
+            <span>Python, FastAPI, React</span>
+            <Icon name="arrow-up-right" />
+          </a>
+          <a href="/work/techlauncher/">
+            <strong>Engineering ownership</strong>
+            <span>TypeScript, PostGIS, Docker, CI/CD</span>
+            <Icon name="arrow-up-right" />
+          </a>
+        </div>
+      </details>
+      <a class="text-link about-cv" href="/Ibrahim-Alharthi-CV.pdf" download>
+        Download CV <Icon name="arrow-down" />
+      </a>
     </div>
   </section>
   <section id="contact" class="contact" aria-labelledby="contact-title">
     <div class="wrap">
-      <p class="eyebrow">05 / Start a conversation</p>
-      <h2 id="contact-title">
-        Got a problem worth solving?
-        <br />
-        <em>Let’s talk.</em>
+      <p class="eyebrow">04 / Contact</p>
+      <h2 id="contact-title" data-reveal>
+        Let’s talk<span class="accent">.</span>
       </h2>
       <a class="contact-email" href="mailto:devibrakh@gmail.com">
         devibrakh@gmail.com <Icon name="arrow-up-right" />
       </a>
       <div class="contact-bottom">
-        <p>
-          Always happy to talk machine learning,
-          <br />
-          computer vision or a good engineering problem.
-        </p>
         <div>
           <a class="text-link" href="https://github.com/ibraKH">
             GitHub <Icon name="arrow-up-right" />

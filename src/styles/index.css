@@ -618,15 +618,14 @@ label {
   display: flex;
   gap: 18px;
 }
-/* Every other row puts its picture on the left, so neighbours never match. */
-.project-flip {
+.project-clip {
   grid-template-columns: 1.45fr 1fr;
 }
-.project-flip .project-info {
+.project-clip .project-info {
   grid-column: 2;
   grid-row: 1;
 }
-.project-flip .visual-link {
+.project-clip .visual-link {
   grid-column: 1;
   grid-row: 1;
 }
@@ -1106,8 +1105,13 @@ label {
   .project-info h3 {
     font-size: 32px;
   }
-  .project-flip {
-    grid-template-columns: 1.2fr 1fr;
+  .project-clip .project-info {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .project-clip .visual-link {
+    grid-column: 2;
+    grid-row: 1;
   }
   .project-link {
     margin-top: 15px;
@@ -1284,8 +1288,8 @@ label {
     font-size: 13px;
     margin-top: 16px;
   }
-  .project-flip .project-info,
-  .project-flip .visual-link {
+  .project-clip .project-info,
+  .project-clip .visual-link {
     grid-column: auto;
     grid-row: auto;
   }

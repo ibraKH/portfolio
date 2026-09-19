@@ -11,11 +11,6 @@ const previews: Record<string, { category: string; summary: string }> = {
     summary:
       "Object detection, text recognition and location context in one AI application.",
   },
-  sceneai: {
-    category: "Real-time multimodal AI",
-    summary:
-      "A local vision system that tracks objects from a live camera, remembers what changed, and describes it in Arabic.",
-  },
   clip: {
     category: "Vision-language learning",
     summary:
@@ -66,15 +61,8 @@ const scholarshipPost =
         Selected work<span class="accent">.</span>
       </h2>
     </div>
-    {projects.map((project, index) => (
-      <article
-        class:list={[
-          "project",
-          `project-${project.slug}`,
-          { "project-flip": index % 2 === 1 },
-        ]}
-        data-reveal
-      >
+    {projects.map((project) => (
+      <article class:list={["project", `project-${project.slug}`]} data-reveal>
         <div class="project-info">
           <p class="eyebrow">
             {project.number} / {previews[project.slug].category}
@@ -243,9 +231,9 @@ const scholarshipPost =
             <span>PyTorch, CLIP, YOLO, OpenCV</span>
             <Icon name="arrow-up-right" />
           </a>
-          <a href="/work/sceneai/">
+          <a href="/work/roya/">
             <strong>AI software systems</strong>
-            <span>Python, FastAPI, WebSockets, MLX</span>
+            <span>Python, FastAPI, React</span>
             <Icon name="arrow-up-right" />
           </a>
           <a href="/work/techlauncher/">

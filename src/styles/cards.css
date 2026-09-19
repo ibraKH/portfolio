@@ -7,7 +7,7 @@ figure.project-visual {
   isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "media" "extra" "stats" "caption" "foot";
+  grid-template-areas: "media" "extra" "caption" "foot";
   container-type: inline-size;
   margin: 0;
   border: 1px solid #ffffffd9;
@@ -158,7 +158,7 @@ figure.project-visual > figcaption {
 
 /* Build facts sit as small glass chips instead of a ruled table. */
 .project-visual .evidence-strip {
-  grid-area: stats;
+  grid-area: extra;
   gap: 10px;
   padding: 4px 16px 16px;
   border: 0;
@@ -308,9 +308,6 @@ figure.project-visual > figcaption {
   .project-visual .evidence-strip {
     gap: 6px;
     padding-inline: 12px;
-  }
-  .project-visual .illustration-motion-control + .evidence-strip {
-    padding-top: 12px;
   }
   .project-visual .evidence-strip > div,
   .project-visual .evidence-strip > div:last-child {

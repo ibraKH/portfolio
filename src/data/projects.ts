@@ -33,8 +33,48 @@ export const projects = [
     caption: "How the pieces connect · illustration, not model output",
   },
   {
-    slug: "clip",
+    slug: "sceneai",
     number: "02",
+    title: "SceneAI",
+    category: "Real-time multimodal AI · Computer vision",
+    tagline:
+      "A camera that sees what’s there, remembers what changed, and explains it in Arabic.",
+    summary:
+      "A local Arabic scene-understanding system combining RF-DETR object detection, temporal tracking and Qwen vision-language generation on Apple Silicon.",
+    role: "End-to-end AI systems engineering",
+    stack: "Python / FastAPI / RF-DETR / Qwen2.5-VL / PyTorch / MLX",
+    fact: "69 tests",
+    factLabel: "Model-free and run in CI. They check the logic, not model accuracy.",
+    problem:
+      "A detector tells you what’s in one frame and forgets it by the next. It can’t say that a person has been at the desk for a minute, or that a bag just appeared. I wanted a camera that keeps track of the scene over time and describes it in Arabic, running on my own Mac so no frame ever leaves the machine.",
+    ownership:
+      "I built it end to end: the browser client and the right-to-left Arabic dashboard, the FastAPI and WebSocket server, detection and tracking, the scene memory, the caption loop and the tests. I also built the fallbacks, so a failed detection pauses the feed instead of crashing it.",
+    approach:
+      "Two models run at very different speeds. RF-DETR works frame by frame, and Qwen2.5-VL takes far longer to write a single sentence. Push everything through one ordinary queue and a backlog builds, so the dashboard ends up describing the room as it was, not as it is. Instead the camera writes into a single latest-frame slot, and the output is split in two lanes: detections are replaceable, so only the newest one waits, while events and captions are kept and delivered in order.",
+    design: [
+      "Live camera",
+      "Object detection",
+      "Tracking and scene memory",
+      "Arabic interpretation",
+      "Live dashboard",
+    ],
+    stats: [
+      { value: 69, label: "Automated tests" },
+      { value: 10, label: "FPS target" },
+      { value: 50, label: "Arabic labels" },
+    ],
+    evidence:
+      "The repository has 69 automated tests, and they run in CI without downloading a model or touching the network. They cover coordinate scaling, label translation, IOU matching, stable track IDs, arrival and departure events, Arabic gender agreement, caption context, WebSocket ordering and the local-origin checks. They show the logic holds. They don’t measure how accurate the models are, and I’m not quoting speed figures here.",
+    limitations:
+      "It needs Apple Silicon and MLX by default, and the 4-bit 3B model can squeeze an 8 GB Mac. There’s no formal accuracy benchmark for detection or tracking. The tracker has no motion or appearance model, so fast movement creates new IDs and two objects of the same class can swap after a full occlusion; SORT or DeepSORT is the next step. Only 50 of the 80 COCO labels have Arabic names, and Tailwind and the Cairo font still load from public CDNs. The lesson I kept: a live system has to know how old its data is. Stale pixels can be thrown away. What they meant has to be kept.",
+    source: "https://github.com/ibraKH/SceneAi",
+    sourceLabel: "Explore the repository",
+    caption:
+      "How fresh frames become scene memory and Arabic descriptions · illustration, not live output",
+  },
+  {
+    slug: "clip",
+    number: "03",
     title: "Learning with less",
     category: "CLIP · Few-shot vision-language learning",
     tagline: "How far can a handful of labelled images take CLIP?",
@@ -66,7 +106,7 @@ export const projects = [
   },
   {
     slug: "techlauncher",
-    number: "03",
+    number: "04",
     title: "Built for collaboration",
     category: "ANU TechLauncher · Scientific software",
     tagline:
@@ -105,7 +145,7 @@ export const projects = [
   },
   {
     slug: "nanogpt",
-    number: "04",
+    number: "05",
     title: "Inside the language model",
     category: "Transformer language modeling · NanoGPT",
     tagline: "Three small GPTs, trained the same way, measured the same way.",

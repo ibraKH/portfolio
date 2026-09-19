@@ -45,6 +45,7 @@ page.on("console", (e) => {
 });
 const routes = [
   "/",
+  "/work/sceneai/",
   "/work/roya/",
   "/work/clip/",
   "/work/techlauncher/",
@@ -105,13 +106,13 @@ for (const route of routes) {
   }
 }
 await page.goto(report.environment.base);
-for (const slug of ["roya", "clip", "techlauncher", "nanogpt"]) {
+for (const slug of ["sceneai", "roya", "clip", "techlauncher", "nanogpt"]) {
   await page.locator(`.project-link[href="/work/${slug}/"]`).click();
   await page.waitForURL(`**/work/${slug}/`);
   await page.getByRole("link", { name: "All work", exact: true }).click();
   await page.waitForURL("**/#work");
 }
-report.journeys.push("All four preview → case study → all work journeys");
+report.journeys.push("All five preview → case study → all work journeys");
 // The hero is now a field of floating tiles: all 21 render and one can be caught on hover.
 assert.equal(await page.locator(".tech-field .tile-node").count(), 21);
 // Tiles never stop drifting, so point at one directly instead of waiting for it to settle.
@@ -164,7 +165,7 @@ const touch = await touchContext.newPage();
 await touch.emulateMedia({ reducedMotion: "reduce" });
 await touch.goto(report.environment.base, { waitUntil: "networkidle" });
 assert.equal(await touch.locator(".tech-field .tile-node").count(), 21);
-assert.equal(await touch.locator(".project").count(), 4);
+assert.equal(await touch.locator(".project").count(), 5);
 await touch.locator(".visual-notes summary").first().tap({ force: true });
 assert.ok(
   (await touch.locator(".visual-notes").first().getAttribute("open")) !== null,

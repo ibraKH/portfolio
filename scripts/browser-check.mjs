@@ -112,27 +112,17 @@ for (const slug of ["roya", "clip", "techlauncher", "nanogpt"]) {
   await page.waitForURL("**/#work");
 }
 report.journeys.push("All four preview → case study → all work journeys");
-await page.locator("#depth").uncheck();
-assert.equal(await page.locator("#depth").isChecked(), false);
-await page.locator("#depth").focus();
-await page.keyboard.press("Space");
-assert.equal(await page.locator("#depth").isChecked(), true);
-report.journeys.push("3D / flat view control works with pointer and keyboard");
-await page.locator('label[for="regions"]').click();
-await page.waitForFunction(
-  () =>
-    getComputedStyle(document.querySelector(".region-layer")).opacity === "1",
-);
-await page.locator("#regions").focus();
-await page.keyboard.press("ArrowRight");
-assert.ok(await page.locator("#meaning").isChecked());
-await page.waitForFunction(
-  () =>
-    getComputedStyle(document.querySelector(".interpretation")).opacity === "1",
-);
-report.journeys.push(
-  "Region overlay visible after transition; arrow-key stage selection",
-);
+// The hero is now a field of floating tiles: all 21 render and one can be caught on hover.
+assert.equal(await page.locator(".tech-field .tile-node").count(), 21);
+// Tiles never stop drifting, so point at one directly instead of waiting for it to settle.
+await page.evaluate(() => window.scrollTo(0, 0));
+const tile = await page.locator(".tech-field .tile-node").first().boundingBox();
+await page.mouse.move(tile.x + tile.width / 2, tile.y + tile.height / 2);
+await page.waitForFunction(() => {
+  const label = document.querySelector(".tech-field .tile-node:hover .tile-label");
+  return label && getComputedStyle(label).opacity === "1";
+});
+report.journeys.push("Hero tiles render and name themselves on hover");
 await page.locator(".visual-notes summary").first().click();
 assert.ok(
   (await page.locator(".visual-notes").first().getAttribute("open")) !== null,
@@ -144,8 +134,8 @@ const menu = page.locator("#site-menu");
 const isOpen = () => menu.evaluate((el) => el.matches(":popover-open"));
 await page.getByRole("button", { name: "Menu", exact: true }).click();
 assert.ok(await isOpen(), "mobile menu opens");
-await menu.getByRole("link", { name: "Experience", exact: true }).click();
-await page.waitForURL("**/#experience");
+await menu.getByRole("link", { name: "About", exact: true }).click();
+await page.waitForURL("**/#about");
 assert.equal(await isOpen(), false, "mobile menu closes after navigating");
 report.journeys.push("Mobile menu opens, navigates and closes");
 const dp = page.waitForEvent("download");
@@ -173,19 +163,14 @@ const touchContext = await browser.newContext({
 const touch = await touchContext.newPage();
 await touch.emulateMedia({ reducedMotion: "reduce" });
 await touch.goto(report.environment.base, { waitUntil: "networkidle" });
-await touch.locator("#depth").uncheck({ force: true });
-assert.equal(await touch.locator("#depth").isChecked(), false);
-await touch.locator('label[for="regions"]').tap({ force: true });
-assert.ok(await touch.locator("#regions").isChecked());
-await touch.locator('label[for="meaning"]').tap({ force: true });
-assert.ok(await touch.locator("#meaning").isChecked());
+assert.equal(await touch.locator(".tech-field .tile-node").count(), 21);
 assert.equal(await touch.locator(".project").count(), 4);
 await touch.locator(".visual-notes summary").first().tap({ force: true });
 assert.ok(
   (await touch.locator(".visual-notes").first().getAttribute("open")) !== null,
 );
 report.journeys.push(
-  "Touch, signature controls, diagram notes and content with JavaScript disabled and reduced motion",
+  "Touch, hero tiles, diagram notes and content with JavaScript disabled and reduced motion",
 );
 await page.emulateMedia({ reducedMotion: "reduce" });
 await page.goto(report.environment.base);

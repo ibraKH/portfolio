@@ -17,10 +17,3 @@
   from = "/sitemap.txt"
   to = "/sitemap.xml"
   status = 301
-
-# SceneAI is on hold in its own branch; send its briefly-live URL to the work list.
-# 302 so browsers and search engines don't treat the move as permanent.
-[[redirects]]
-  from = "/work/sceneai/*"
-  to = "/#work"
-  status = 302

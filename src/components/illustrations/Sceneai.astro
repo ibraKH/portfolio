@@ -1,0 +1,357 @@
+---
+import IsoBox from "./IsoBox.astro";
+import IsoTree from "./IsoTree.astro";
+import { iso, poly, line, box, onLeft, onRight, bounds, brackets, chipWidth } from "./iso";
+import type { Pt } from "./iso";
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+
+// Arabic has no mono width to lean on, so chips are sized from widths measured in
+// Geeza Pro (em per string), with a little slack for the other fonts in the stack.
+const EM: Record<string, number> = {
+  "#2 حاسوب": 4.03,
+  "#4 شخص": 3.89,
+  "#9 حقيبة": 3.32,
+  "#12 ظهر شخص": 6.19,
+  "#13 ظهرت حقيبة": 6.17,
+  "حاسوب ×1": 4.06,
+  "شخص ×1": 3.92,
+  "حقيبة ×1": 3.35,
+  حاسوب: 2.61,
+  شخص: 2.47,
+  حقيبة: 1.9,
+};
+const arWidth = (text: string, size: number, pad: number) => Math.round(EM[text] * size * 1.06 + pad);
+
+// The camera sees a small room: two walls, a desk with a laptop, a person, and a bag set down.
+const p = iso([182, 256], 34);
+const X = 5;
+const Y = 4.6;
+const floor = poly([p(0, 0), p(X, 0), p(X, Y), p(0, Y)]);
+const floorLeft = poly([p(0, Y), p(X, Y), p(X, Y, -0.35), p(0, Y, -0.35)]);
+const floorRight = poly([p(X, 0), p(X, Y), p(X, Y, -0.35), p(X, 0, -0.35)]);
+const boards = [1, 2, 3, 4].map((i) => line(p(i, 0), p(i, Y))).join("");
+const wallBack = onLeft(p, 0, 0, X, 0, 2.8);
+const wallSide = onRight(p, 0, 0, Y, 0, 2.8);
+const skirting = onLeft(p, 0, 0, X, 0, 0.12) + onRight(p, 0, 0, Y, 0, 0.12);
+const pane = onLeft(p, 0, 2.95, 4.45, 1.15, 2.3);
+const mullions = line(p(3.7, 0, 1.15), p(3.7, 0, 2.3)) + line(p(2.95, 0, 1.72), p(4.45, 0, 1.72));
+const frame = onRight(p, 0, 1.2, 2.3, 1.2, 2.1);
+const frameInner = onRight(p, 0, 1.35, 2.15, 1.35, 1.95);
+
+const legs = [
+  [0.6, 0.45],
+  [3.0, 0.45],
+  [0.6, 1.5],
+  [3.0, 1.5],
+].map(([x, y]) => box(p, x, y, 0.12, 0.12, 1.1));
+const deskTop = box(p, 0.5, 0.35, 2.75, 1.35, 0.14, 1.1);
+const laptopBase = box(p, 1.35, 0.62, 1.05, 0.72, 0.06, 1.24);
+const screenPts: Pt[] = [p(1.35, 0.62, 1.3), p(2.4, 0.62, 1.3), p(2.4, 0.62, 2.02), p(1.35, 0.62, 2.02)];
+const screen = poly(screenPts);
+const glare = onLeft(p, 0.62, 1.47, 2.28, 1.4, 1.92);
+
+const personLegs = box(p, 0.95, 2.75, 0.56, 0.36, 1.35);
+const personBody = box(p, 0.85, 2.67, 0.76, 0.52, 1.1, 1.35);
+const head = p(1.23, 2.93, 2.86);
+const neck = p(1.23, 2.93, 2.5);
+
+const bag = box(p, 3.55, 3.15, 0.8, 0.46, 0.7);
+const bagFlap = onLeft(p, 3.61, 3.6, 4.3, 0.34, 0.66);
+const [hx0, hy0] = p(3.72, 3.38, 0.7);
+const [hx1, hy1] = p(4.18, 3.38, 0.7);
+const handle = `M${hx0.toFixed(1)} ${hy0.toFixed(1)}C${hx0.toFixed(1)} ${(hy0 - 16).toFixed(1)} ${hx1.toFixed(1)} ${(hy1 - 16).toFixed(1)} ${hx1.toFixed(1)} ${hy1.toFixed(1)}`;
+const plant = { base: p(4.45, 0.55, 0), crown: p(4.45, 0.55, 1.35) };
+
+// Detector boxes and the track chips that ride on them.
+const chip = (region: ReturnType<typeof bounds>, text: string, anchor: "left" | "right") => {
+  const w = arWidth(text, 12, 14);
+  return { region, text, w, x: anchor === "left" ? region.x0 : region.x1 - w, y: region.y0 - 22 };
+};
+const tracks = [
+  { ...chip(bounds([...laptopBase.corners, ...screenPts], 5), "#2 حاسوب", "left"), cls: "sc-lock" },
+  {
+    ...chip(
+      bounds([...personLegs.corners, ...personBody.corners, [head[0], head[1] - 11], [head[0] - 10, head[1]]], 6),
+      "#4 شخص",
+      "right",
+    ),
+    cls: "sc-lock sc-lock-person",
+  },
+  { ...chip(bounds([...bag.corners, [hx0, hy0 - 12]], 6), "#9 حقيبة", "left"), cls: "sc-lock sc-lock-bag" },
+];
+
+// Fast lane: frames race in, only the newest sits in the slot, the rest drop out.
+const lane = { x0: 350, x1: 625 };
+const sleepers = Array.from({ length: 18 }, (_, i) => 358 + i * 12);
+const frames = [0, 1, 2].map((i) => ({
+  delay: -i / 3,
+  // Still frame: one frame in the slot, one stale frame falling out, one not yet sent.
+  still: ["transform:translateX(219px)", "transform:translate(219px,24px);opacity:.35", "opacity:0"][i],
+  cross: i === 1 ? "" : "opacity:0",
+}));
+
+// Scene memory: counts, how long the person has been there, the event sequence.
+const counts = [
+  { text: "حاسوب ×1", cls: "" },
+  { text: "شخص ×1", cls: "sc-at-person" },
+  { text: "حقيبة ×1", cls: "sc-at-bag" },
+];
+let right = 600;
+const memoryChips = counts.map((c) => {
+  const w = arWidth(c.text, 13, 16);
+  right -= w;
+  const x = right;
+  right -= 6;
+  return { ...c, x, w };
+});
+
+// Slow lane: events and captions, in order, none of them dropped.
+const packets = [
+  { text: "#12 ظهر شخص", cls: "sc-lane-12", event: true },
+  { text: "CAPTION", cls: "sc-lane-c1", event: false },
+  { text: "#13 ظهرت حقيبة", cls: "sc-lane-13", event: true },
+  { text: "CAPTION", cls: "sc-lane-c2", event: false },
+].map((k) => ({ ...k, w: k.event ? arWidth(k.text, 12, 20) : chipWidth(k.text, 10) + 4 }));
+
+// The dashboard: a live count row, an event log that fills from the top, a caption.
+let countRight = 944;
+const liveCounts = [
+  { text: "حاسوب", cls: "" },
+  { text: "شخص", cls: "sc-at-person" },
+  { text: "حقيبة", cls: "sc-at-bag" },
+].map((c) => {
+  const w = arWidth(c.text, 13, 36);
+  countRight -= w;
+  const x = countRight;
+  countRight -= 6;
+  return { ...c, x, w };
+});
+const log = [
+  { text: "#13 ظهرت حقيبة", cls: "sc-log-13" },
+  { text: "#12 ظهر شخص", cls: "sc-log-12" },
+  { text: "#11 ظهر حاسوب", cls: "sc-log-11" },
+];
+const fps = Array.from({ length: 10 }, (_, i) => 222 + i * 5);
+---
+
+<svg
+  class="illustration"
+  viewBox="0 0 1000 620"
+  width="1000"
+  height="620"
+  role="img"
+  aria-label={label}
+>
+  <defs>
+    <clipPath id="sc-view">
+      <rect x="41" y="111" width="288" height="322"></rect>
+    </clipPath>
+    <clipPath id="sc-seen">
+      <rect x="440" y="291" width="60" height="13"></rect>
+    </clipPath>
+    <clipPath id="sc-seq">
+      <rect x="440" y="319" width="60" height="13"></rect>
+    </clipPath>
+  </defs>
+  <text class="mono" x="40" y="50" font-size="12" fill="#4e5b6d">
+    FIG. 01 / FRESH FRAMES, KEPT MEANING
+  </text>
+
+  <rect x="48" y="90" width="290" height="390" rx="10" fill="#e2e8f1" />
+  <rect x="40" y="80" width="290" height="390" rx="10" fill="#ffffff" stroke="#d5dce5" />
+  <path d="M40 110V90a10 10 0 0 1 10-10H320a10 10 0 0 1 10 10V110Z" fill="#f7f9fc" />
+  <path d="M40 110H330M40 434H330" stroke="#d5dce5" />
+  <circle cx="60" cy="95" r="4.5" fill="#d5dce5" />
+  <circle cx="76" cy="95" r="4.5" fill="#d5dce5" />
+  <circle cx="92" cy="95" r="4.5" fill="#d5dce5" />
+  <text class="mono" x="110" y="99" font-size="11" fill="#596575">CAMERA / LIVE</text>
+  {fps.map((x, i) => <rect class="sc-fps" x={x} y="90" width="2.5" height="10" rx="1" fill="#2455d6" style={`animation-delay:${i * 0.1}s`} />)}
+  <text class="mono" x="276" y="99" font-size="10" fill="#202632">10 FPS</text>
+
+  <g clip-path="url(#sc-view)">
+  <path d={wallSide} fill="#dfe7f2" stroke="#c9d4e2" stroke-width="0.8" />
+  <path d={wallBack} fill="#eef2f8" stroke="#c9d4e2" stroke-width="0.8" />
+  <path d={skirting} fill="#c9d4e2" />
+  <path d={pane} fill="#dce8ff" stroke="#b9cdfb" />
+  <path d={mullions} stroke="#b9cdfb" />
+  <path d={frame} fill="#c3d3ea" />
+  <path d={frameInner} fill="#eef3fb" />
+  <path d={floorLeft} fill="#c4d0df" />
+  <path d={floorRight} fill="#a7b7cc" />
+  <path d={floor} fill="#e4ebf4" stroke="#a1b2c9" stroke-width="0.8" />
+  <path d={boards} stroke="#d3ddea" />
+  <IsoTree {...plant} />
+
+  {legs.map((leg) => <IsoBox faces={leg} top="#7592b9" left="#56739c" right="#44628d" />)}
+  <IsoBox faces={deskTop} top="#f7f9fc" left="#c9d6e8" right="#b1c2da" stroke="#a6b8cf" />
+  <IsoBox faces={laptopBase} top="#c3d3ea" left="#8aa3c6" right="#7592b9" />
+  <path d={screen} fill="#2455d6" stroke="#173a92" stroke-width="0.8" />
+  <path d={glare} fill="#5b82e6" />
+
+  <g class="sc-at-person">
+    <IsoBox faces={personLegs} top="#4b5a70" left="#2b3444" right="#202632" />
+    <IsoBox faces={personBody} top="#6b83a3" left="#3a5a86" right="#2c4770" />
+    <path d={line(neck, [head[0], head[1] + 6])} stroke="#8aa3c6" stroke-width="5" />
+    <circle cx={head[0]} cy={head[1]} r="10" fill="#8aa3c6" stroke="#6b83a3" />
+  </g>
+  <g class="sc-at-bag">
+    <path d={handle} fill="none" stroke="#173a92" stroke-width="2.5" />
+    <IsoBox faces={bag} top="#2455d6" left="#1d47b3" right="#173a92" stroke="#8baff7" />
+    <path d={bagFlap} fill="#5b82e6" />
+  </g>
+
+  {
+    tracks.map((t) => (
+      <g class={t.cls}>
+        <path d={brackets(t.region, 9)} fill="none" stroke="#2455d6" stroke-width="2" />
+        <rect x={t.x} y={t.y} width={t.w} height="18" rx="2" fill="#2455d6" />
+        <text class="ar" x={t.x + t.w - 7} y={t.y + 13.5} font-size="12" fill="#ffffff" direction="rtl">
+          {t.text}
+        </text>
+      </g>
+    ))
+  }
+  </g>
+  <text class="mono" x="58" y="456" font-size="10" fill="#596575">GETUSERMEDIA · 640 PX · JPEG 60%</text>
+
+  <rect x="40" y="490" width="268" height="26" rx="13" fill="#ffffff" stroke="#d5dce5" />
+  <circle cx="56" cy="503" r="4" fill="#2455d6" />
+  <text class="mono" x="68" y="507" font-size="10" fill="#202632">ON-DEVICE · APPLE SILICON · NO CLOUD</text>
+
+  <path class="flow" d="M330 150H350" fill="none" stroke="#2455d6" stroke-width="1.6" />
+  <text class="mono" x={lane.x0} y="124" font-size="11" fill="#202632">RF-DETR · EVERY FRAME</text>
+  <text class="mono" x="566" y="124" font-size="10" fill="#596575">LATEST</text>
+  <path d={sleepers.map((x) => `M${x} 138V162`).join("")} stroke="#e3e9f2" stroke-width="2" />
+  <path d={`M${lane.x0} 138H${lane.x1}M${lane.x0} 162H${lane.x1}`} stroke="#c3cfdf" stroke-width="1.5" />
+  <rect x="566" y="135" width="46" height="30" rx="3" fill="#f4f7ff" />
+  <path d={brackets({ x0: 566, y0: 135, x1: 612, y1: 165 }, 7)} fill="none" stroke="#2455d6" stroke-width="2" />
+  {
+    frames.map((f) => (
+      <g class="sc-frame" style={`animation-delay:${f.delay}s;${f.still}`}>
+        <rect x="352" y="139" width="36" height="22" rx="2" fill="#dce8ff" stroke="#8baff7" />
+        <path d="M356 155L366 147L373 152L380 145L385 155" fill="none" stroke="#5b82e6" stroke-width="1.4" />
+        <rect x="376" y="142" width="7" height="6" fill="none" stroke="#2455d6" />
+        <path
+          class="sc-frame-x"
+          d="M364 144L376 156M376 144L364 156"
+          stroke="#202632"
+          stroke-width="2.2"
+          style={`animation-delay:${f.delay}s;${f.cross}`}
+        />
+      </g>
+    ))
+  }
+  <text class="mono" x={lane.x0} y="184" font-size="10" fill="#596575">REPLACEABLE · NEWEST ONLY</text>
+
+  <path class="flow" d="M612 150H650M632 150V276H616" fill="none" stroke="#2455d6" stroke-width="1.6" />
+
+  <rect x="356" y="218" width="266" height="128" rx="6" fill="#e3e9f2" />
+  <rect x="350" y="212" width="266" height="128" rx="6" fill="#ffffff" stroke="#d5dce5" />
+  <text class="mono" x="368" y="236" font-size="11" fill="#596575">SCENESTATE / MEMORY</text>
+  {
+    memoryChips.map((c) => (
+      <g class={c.cls} style="animation-delay:.3s">
+        <rect x={c.x} y="249" width={c.w} height="22" rx="4" fill="#dce8ff" />
+        <text class="ar" x={c.x + c.w - 8} y="265" font-size="13" fill="#173666" direction="rtl">
+          {c.text}
+        </text>
+      </g>
+    ))
+  }
+  <g class="sc-at-person" style="animation-delay:.3s">
+    <text class="mono" x="368" y="302" font-size="10" fill="#596575">SEEN FOR</text>
+    <text class="mono" x="468" y="302" font-size="10" fill="#202632" text-anchor="end">00:0</text>
+    <g clip-path="url(#sc-seen)">
+      <text class="mono sc-seconds" x="468" y="302" font-size="10" fill="#202632">
+        {Array.from({ length: 10 }, (_, i) => <tspan x="468" dy={i ? 14 : 0}>{i}</tspan>)}
+      </text>
+    </g>
+    <text class="ar" x="600" y="302" font-size="13" fill="#202632" direction="rtl">#4 شخص</text>
+  </g>
+  <text class="mono" x="368" y="330" font-size="10" fill="#596575">EVENT SEQ</text>
+  <g clip-path="url(#sc-seq)">
+    <text class="mono sc-seq" x="448" y="302" font-size="10" fill="#202632">
+      {["#11", "#12", "#13"].map((n, i) => <tspan x="448" dy={i ? 14 : 0}>{n}</tspan>)}
+    </text>
+  </g>
+
+  <path class="flow" d="M366 340V380" fill="none" stroke="#2455d6" stroke-width="1.6" />
+  <path d={sleepers.map((x) => `M${x} 368V392`).join("")} stroke="#e3e9f2" stroke-width="2" />
+  <path d={`M${lane.x0} 368H${lane.x1}M${lane.x0} 392H${lane.x1}`} stroke="#c3cfdf" stroke-width="1.5" />
+  <path d="M600 374L606 380L600 386M610 374L616 380L610 386" fill="none" stroke="#9fb1c9" stroke-width="1.5" />
+  {
+    packets.map((k) => (
+      <g class={`sc-packet ${k.cls}`} style="opacity:0">
+        <rect x="352" y="369" width={k.w} height="22" rx="11" fill={k.event ? "#ffffff" : "#202632"} stroke={k.event ? "#2455d6" : "#5b82e6"} stroke-width="1.5" />
+        {k.event ? (
+          <text class="ar" x={352 + k.w - 10} y="384.5" font-size="12" fill="#202632" direction="rtl">
+            {k.text}
+          </text>
+        ) : (
+          <text class="mono" x="362" y="384" font-size="10" fill="#ffffff">
+            {k.text}
+          </text>
+        )}
+      </g>
+    ))
+  }
+  <path class="flow" d="M625 380H650" fill="none" stroke="#2455d6" stroke-width="1.6" />
+  <text class="mono" x={lane.x0} y="416" font-size="11" fill="#202632">QWEN · ON CHANGE, 3 TO 12 S</text>
+  <text class="mono" x={lane.x0} y="434" font-size="10" fill="#596575">RELIABLE · IN ORDER, NONE DROPPED</text>
+
+  <rect x="658" y="106" width="310" height="444" rx="10" fill="#e2e8f1" />
+  <rect x="650" y="96" width="310" height="444" rx="10" fill="#ffffff" stroke="#d5dce5" />
+  <path d="M650 128V106a10 10 0 0 1 10-10H950a10 10 0 0 1 10 10V128Z" fill="#f7f9fc" />
+  <path d="M650 128H960" stroke="#d5dce5" />
+  <circle class="pulse" cx="668" cy="112" r="7" fill="none" stroke="#2455d6" stroke-width="1.5" />
+  <circle cx="668" cy="112" r="3.5" fill="#2455d6" />
+  <text class="mono" x="680" y="116" font-size="10" fill="#202632">LIVE</text>
+  <text class="ar" x="944" y="117" font-size="13" fill="#202632" direction="rtl">لوحة المشهد</text>
+
+  <text class="mono" x="666" y="158" font-size="10" fill="#596575">COUNTS</text>
+  {
+    liveCounts.map((c) => (
+      <g class={c.cls} style="animation-delay:.3s">
+        <rect x={c.x} y="141" width={c.w} height="24" rx="12" fill="#f4f7ff" stroke="#b9cdfb" />
+        <circle cx={c.x + 12} cy="153" r="8" fill="#2455d6" />
+        <text class="mono" x={c.x + 12} y="156.5" font-size="10" fill="#ffffff" text-anchor="middle">1</text>
+        <text class="ar" x={c.x + c.w - 10} y="157.5" font-size="13" fill="#173666" direction="rtl">
+          {c.text}
+        </text>
+      </g>
+    ))
+  }
+
+  <text class="ar" x="944" y="196" font-size="12" fill="#596575" direction="rtl">سجل الأحداث</text>
+  <text class="mono" x="666" y="196" font-size="10" fill="#596575">EVENTS</text>
+  <path d="M666 206H944" stroke="#e3e9f2" />
+  {
+    log.map((row, i) => (
+      <g class={row.cls}>
+        <rect class="sc-row-new" x="666" y={212 + i * 28} width="278" height="24" rx="4" fill="#f4f7ff" style={i ? "opacity:0" : ""} />
+        <circle cx="934" cy={224 + i * 28} r="3" fill={i ? "#9fb1c9" : "#2455d6"} />
+        <text class="ar" x="922" y={229 + i * 28} font-size="13" fill="#202632" direction="rtl">
+          {row.text}
+        </text>
+      </g>
+    ))
+  }
+
+  <text class="mono" x="666" y="318" font-size="10" fill="#596575">GENERATED / AN INTERPRETATION</text>
+  <path d="M870 314H944" stroke="#9fb1c9" stroke-dasharray="4 4" />
+  <rect x="666" y="330" width="278" height="192" rx="6" fill="#202632" stroke="#5b82e6" stroke-width="1.5" stroke-dasharray="6 5" />
+  <text class="mono" x="682" y="356" font-size="10" fill="#8baff7">QWEN2.5-VL 3B · MLX</text>
+  <text class="ar" x="928" y="396" font-size="15" fill="#ffffff" direction="rtl">يقف شخص قرب مكتب عليه حاسوب محمول،</text>
+  <text class="ar" x="928" y="426" font-size="15" fill="#ffffff" direction="rtl">وظهرت حقيبة على الأرض قبل لحظات.</text>
+  <rect class="sc-type-1" x="676" y="378" width="258" height="26" fill="#202632" />
+  <rect class="sc-type-2" x="676" y="408" width="258" height="26" fill="#202632" />
+  <rect class="blink" x="722" y="412" width="2" height="18" fill="#5b82e6" />
+  <text class="mono" x="682" y="484" font-size="10" fill="#8b97a8">PROMPT / COUNTS, TIME PRESENT,</text>
+  <text class="mono" x="682" y="500" font-size="10" fill="#8b97a8">ARRIVALS, DEPARTURES, LAST CAPTION</text>
+
+  <path d="M40 566H960" stroke="#d5dce5" />
+  <text class="mono" x="40" y="592" font-size="11" fill="#202632">DROP STALE PIXELS · PRESERVE MEANING</text>
+</svg>

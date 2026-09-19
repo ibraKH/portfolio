@@ -6,6 +6,11 @@ import Icon from "../components/Icon.astro";
 import "../styles/lab.css";
 import { projects } from "../data/projects";
 const previews: Record<string, { category: string; summary: string }> = {
+  sceneai: {
+    category: "Real-time multimodal AI",
+    summary:
+      "A local vision system that tracks objects from a live camera, remembers what changed, and describes it in Arabic.",
+  },
   roya: {
     category: "Multimodal AI",
     summary:
@@ -61,8 +66,15 @@ const scholarshipPost =
         Selected work<span class="accent">.</span>
       </h2>
     </div>
-    {projects.map((project) => (
-      <article class:list={["project", `project-${project.slug}`]} data-reveal>
+    {projects.map((project, index) => (
+      <article
+        class:list={[
+          "project",
+          `project-${project.slug}`,
+          { "project-flip": index % 2 === 1 },
+        ]}
+        data-reveal
+      >
         <div class="project-info">
           <p class="eyebrow">
             {project.number} / {previews[project.slug].category}
@@ -231,9 +243,9 @@ const scholarshipPost =
             <span>PyTorch, CLIP, YOLO, OpenCV</span>
             <Icon name="arrow-up-right" />
           </a>
-          <a href="/work/roya/">
+          <a href="/work/sceneai/">
             <strong>AI software systems</strong>
-            <span>Python, FastAPI, React</span>
+            <span>Python, FastAPI, WebSockets, MLX</span>
             <Icon name="arrow-up-right" />
           </a>
           <a href="/work/techlauncher/">

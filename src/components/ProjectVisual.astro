@@ -1,4 +1,5 @@
 ---
+import Sceneai from "./illustrations/Sceneai.astro";
 import Roya from "./illustrations/Roya.astro";
 import Clip from "./illustrations/Clip.astro";
 import Techlauncher from "./illustrations/Techlauncher.astro";
@@ -18,6 +19,7 @@ interface Props {
 const { slug, title, caption, design, stats, href } = Astro.props;
 const Media = href ? "a" : "div";
 const illustrations = {
+  sceneai: Sceneai,
   roya: Roya,
   clip: Clip,
   techlauncher: Techlauncher,
@@ -25,7 +27,7 @@ const illustrations = {
 };
 const Illustration = illustrations[slug as keyof typeof illustrations];
 // These figures run like a live feed, so they loop and offer a pause.
-const loops = ["roya"].includes(slug);
+const loops = ["sceneai", "roya"].includes(slug);
 ---
 
 <figure
